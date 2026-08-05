@@ -45,7 +45,8 @@ export async function createOrReadThumbnail(
   folderName,
   sharp,
   rootIndex = 'root',
-  relPath = ''
+  relPath = '',
+  base64Root,
 ) {
   // Ensure relative path is safe and not escaping the root
   let safeRel = relPath || '';
@@ -56,7 +57,7 @@ export async function createOrReadThumbnail(
     safeRel = folderName;
   }
 
-  const thumbPath = path.join(outDir, CACHE_FOLDER, rootIndex, safeRel, fileName);
+  const thumbPath = path.join(outDir, CACHE_FOLDER, base64Root, safeRel, fileName);
   await fsp.mkdir(path.dirname(thumbPath), { recursive: true });
 
   try {

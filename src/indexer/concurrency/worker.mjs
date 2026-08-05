@@ -62,12 +62,12 @@ export async function worker(queue, emit, citiesGrid, deps) {
         if (transformPool) {
           await transformPool.acquire();
           try {
-            ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath));
+            ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath, base64Root));
           } finally {
             transformPool.release();
           }
         } else {
-          ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath));
+          ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath, base64Root));
         }
       } else {
         // Non-image media: log it and continue without thumbnail creation
