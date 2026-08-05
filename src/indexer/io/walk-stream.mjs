@@ -67,7 +67,7 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
       if (!imageExists) continue;
 
       const folder = path.basename(path.dirname(full));
-      const id = folder + SEPARATOR + title;
+      const id = root + SEPARATOR + folder + SEPARATOR + title;
 
       if (existingSet.has(id)) continue;
 
