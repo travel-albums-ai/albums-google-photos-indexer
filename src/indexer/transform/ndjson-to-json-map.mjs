@@ -38,8 +38,9 @@ function findNearestCity(
 }
 
 export const convertJSON = (obj, citiesGrid) => {
-  const folder = obj.path.split("/").slice(-2, -1)[0];
-  const { data, type, path, name, ...rest } = obj;
+  // const folder = obj.path.split("/").slice(-2, -1)[0];
+  const { data, relativePath, type, path, name, ...rest } = obj;
+  const folder = relativePath
 
   const {
     geoDataExif,

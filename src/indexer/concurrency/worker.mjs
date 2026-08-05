@@ -75,7 +75,8 @@ export async function worker(queue, emit, citiesGrid, deps) {
 
       record.width = width;
       record.height = height;
-      record.absolutePath = full.replace(ROOT, '').replace(/\\/g, '/').split('/').slice(1,-1).join('/')
+      record.relativePath = relPath;
+      record.rootIndex = Buffer.from(ROOT).toString('base64');
 
       const { result, id } = convertJSON(record, citiesGrid);
 
