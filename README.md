@@ -8,9 +8,12 @@ This repository contains a small indexer that scans a Google Takeout export (JSO
 flowchart TD
   Start([Start]) --> Scan["Scan TAKEOUT_ROOT for .json files"]
   Scan --> Walk["walkStream: push files into the queue"]
-  Walk --> Queue["In-memory queue"]
-  Queue --> WorkerPool["Worker pool (concurrency)"]
-  WorkerPool --> Worker["worker() - per-file processing"]
+  Walk --> Queue["In-memory queue (FIFO)"]
+
+  %% Semaphore controls parallel worker tasks
+  Queue --> Semaphore["Semaphore\n(permits = concurrency)"]
+  Semaphore -->|acquire permit| WorkerPool["Worker pool\n(allocates permit -> worker task)"]
+  WorkerPool --> Worker["worker() - per-file processing\n(runs in parallel up to concurrency)"]
 
   subgraph WorkerActions [Worker actions]
     Worker --> ReadJson["readJsonSafe(file) -> parsed record"]
@@ -24,7 +27,16 @@ flowchart TD
     Emit --> Metadata["metadata.json (NDJSON)"]
   end
 
+  %% release permit back to semaphore when worker finishes
+  Worker --> Release["release permit"]
+  Release --> Semaphore
+
+  %% show completion
   Metadata --> End([Done])
+
+  %% styling hint for semaphore node
+  classDef sem fill:#f3f4f6,stroke:#333,stroke-width:1px;
+  class Semaphore sem;
 ```
 
 **What each component does**
