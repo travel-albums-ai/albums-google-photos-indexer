@@ -1,5 +1,5 @@
-import crypto from 'node:crypto';
 import path from 'node:path';
+import { SEPARATOR } from '../indexer.mjs';
 
 function safeDecode(input) {
   if (!input || typeof input !== 'string') return input;
@@ -49,26 +49,8 @@ export async function worker(queue, emit, citiesGrid, deps) {
         relPath = path.basename(folder);
       }
 
-      // Slugify helper for file-friendly segments
-      const slugify = (s) => {
-        if (!s || typeof s !== 'string') return '';
-        return s
-          .normalize('NFKD')
-          .replace(/[^\\w\\s-]/g, '')
-          .trim()
-          .replace(/[\\s_]+/g, '-')
-          .replace(/-+/g, '-')
-          .toLowerCase();
-      };
-
-      // Build a file-friendly relative path by slugifying each segment
-      let relPathSlug = relPath.split('/').map(slugify).filter(Boolean).join('/');
-      if (!relPathSlug) relPathSlug = slugify(path.basename(folder)) || 'root';
-
-      // File-friendly index for the discovery root literal, include short hash for uniqueness
-      const rootBase = slugify(path.basename(ROOT) || 'root') || 'root';
-      const rootHash = crypto.createHash('sha1').update(String(ROOT)).digest('hex').slice(0, 8);
-      const rootIndex = `${rootBase}-${rootHash}`;
+      // File-friendly index for the discovery root literal
+      const rootIndex = (path.basename(ROOT) || 'root').replace(/[^a-zA-Z0-9-_]/g, SEPARATOR) || 'root';
 
       let width = 0, height = 0;
 
@@ -79,12 +61,12 @@ export async function worker(queue, emit, citiesGrid, deps) {
         if (transformPool) {
           await transformPool.acquire();
           try {
-            ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPathSlug));
+            ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath));
           } finally {
             transformPool.release();
           }
         } else {
-          ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPathSlug));
+          ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath));
         }
       } else {
         // Non-image media: log it and continue without thumbnail creation

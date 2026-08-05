@@ -172,7 +172,3 @@ npm run
 # run linter (if configured)
 npm run lint
 ```
-
-TODO
-- notice missing thumbnails
-- notice originally removed file or moved files

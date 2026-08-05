@@ -1,16 +1,4 @@
-import crypto from 'node:crypto';
 import { SEPARATOR } from '../indexer.mjs';
-
-const slugifyKey = (s) => {
-  if (!s || typeof s !== 'string') return '';
-  return s
-    .normalize('NFKD')
-    .replace(/[^\w\s-]/g, '')
-    .trim()
-    .replace(/[\s_]+/g, '-')
-    .replace(/-+/g, '-')
-    .toLowerCase();
-};
 
 function cellKey(latCell, lonCell) {
   return `${latCell}:${lonCell}`;
@@ -93,12 +81,6 @@ export const convertJSON = (obj, citiesGrid) => {
     social: sharedAlbumComments,
   }
 
-  // Create a deterministic, unique key: slug(folder) + SEPARATOR + slug(title) + SEPARATOR + short-hash(path)
-  const rawTitle = data.title || '';
-  const safeTitle = slugifyKey(rawTitle) || 'untitled';
-  const safeFolder = slugifyKey(folder) || 'root';
-  const shortHash = crypto.createHash('sha1').update(String(obj.path || JSON.stringify(obj))).digest('hex').slice(0, 8);
-  const key = `${safeFolder}${SEPARATOR}${safeTitle}${SEPARATOR}${shortHash}`;
 
-  return { [key]: result, result, folder, id: key };
+  return { [folder + SEPARATOR + data.title]: result, result, folder, id: [folder + SEPARATOR + data.title] }
 }
