@@ -5,9 +5,13 @@ import { createQueue } from './queue.mjs';
 
 export async function walkStream(root, emit, existingSet, citiesGrid, concurrency, workerFunc, progress) {
   const stack = [root];
-  const queue = createQueue();
+  // bounded queue to avoid excessive memory usage during large scans
+  const queue = createQueue(concurrency * 200);
 
   console.log(`Scanning for JSON files in ${root}...`, citiesGrid.size ? `Cities grid size: ${citiesGrid.size}` : '');
+
+  // start worker pool before producing so work happens while scanning
+  const workers = Array.from({ length: concurrency }, () => workerFunc(queue, emit, citiesGrid));
 
   while (stack.length) {
     const dir = stack.pop();
@@ -32,11 +36,11 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
       progress.addFound(); progress.addFile(1);
       progress.log();
 
-      queue.push({ full, e });
+      await queue.push({ full, e });
     }
   }
 
-  await Promise.all(
-    Array.from({ length: concurrency }, () => workerFunc(queue, emit, citiesGrid))
-  );
+  // signal no more items and wait for workers to finish
+  queue.close();
+  await Promise.all(workers);
 }

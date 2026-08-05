@@ -14,9 +14,10 @@ import { readJsonSafe } from './indexer/readJsonSafe.mjs';
 import { buildCitiesGridCleaned } from './indexer/utils.mjs';
 import { walkStream } from './indexer/walkStream.mjs';
 import { worker } from './indexer/worker.mjs';
+import { createSemaphore } from './indexer/queue.mjs';
 
 export const SEPARATOR = '__';
-export const CACHE_FOLDER = '/thumbnails';
+export const CACHE_FOLDER = 'thumbnails';
 export const OUT_FILE = 'metadata.json';
 
 const MODE = 'ssd';
@@ -70,7 +71,11 @@ async function main() {
 
   const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
 
-  const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, deps);
+  // create a transform semaphore sized to the sharp concurrency to bound in-flight image transforms
+  const transformPool = createSemaphore(ACTIVE_CONFIG.sharp);
+  const depsWithPool = { ...deps, transformPool };
+
+  const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
 
   await walkStream(ROOT, emit, existingSet, citiesGrid, CONCURRENCY, workerFunc, progress);
 

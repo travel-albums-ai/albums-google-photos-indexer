@@ -1,10 +1,10 @@
 import path from 'node:path';
 
 export async function worker(queue, emit, citiesGrid, deps) {
-  const { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir, sharp, ROOT } = deps;
+  const { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir, sharp, ROOT, transformPool } = deps;
 
   while (true) {
-    const item = queue.pop();
+    const item = await queue.pop();
     if (!item) break;
 
     const { full, e } = item;
@@ -21,7 +21,18 @@ export async function worker(queue, emit, citiesGrid, deps) {
       const filename = record.data.title;
       const folderName = full.split('/').slice(-2, -1).join('/');
 
-      const { width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp);
+      // Bound concurrent image transforms using transformPool semaphore
+      let width, height;
+      if (transformPool) {
+        await transformPool.acquire();
+        try {
+          ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp));
+        } finally {
+          transformPool.release();
+        }
+      } else {
+        ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp));
+      }
 
       record.width = width;
       record.height = height;

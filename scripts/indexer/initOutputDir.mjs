@@ -5,7 +5,7 @@ import { CACHE_FOLDER, OUT_FILE } from '../indexer.mjs';
 
 export async function initOutputDir(dir) {
   await fsp.mkdir(dir, { recursive: true });
-  await fsp.mkdir(dir + CACHE_FOLDER, { recursive: true });
+  await fsp.mkdir(path.join(dir, CACHE_FOLDER), { recursive: true });
 
   const outFile = path.join(dir, OUT_FILE);
   const stream = fs.createWriteStream(outFile, {
