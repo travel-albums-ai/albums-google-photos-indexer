@@ -1,0 +1,41 @@
+import fsp from 'node:fs/promises';
+import path from 'node:path';
+import { createQueue } from './queue.mjs';
+
+export async function walkStream(root, emit, existingSet, citiesGrid, concurrency, workerFunc, progress) {
+  const stack = [root];
+  const queue = createQueue();
+
+  console.log(`Scanning for JSON files in ${root}...`, citiesGrid.size ? `Cities grid size: ${citiesGrid.size}` : '');
+
+  while (stack.length) {
+    const dir = stack.pop();
+
+    let dh;
+    try { dh = await fsp.opendir(dir); } catch { continue; }
+
+    for await (const e of dh) {
+      const full = path.join(dir, e.name);
+
+      if (e.isDirectory()) {
+        stack.push(full);
+        continue;
+      }
+
+      const id = full.split('/').slice(-2).join('/').split('.').slice(0, -2).join('.').replace(/\//g, '::');
+
+      if (!e.isFile() || existingSet.has(id) || !/\.json$/i.test(e.name))
+        continue;
+
+      existingSet.add(full);
+      progress.addFound(); progress.addFile(1);
+      progress.log();
+
+      queue.push({ full, e });
+    }
+  }
+
+  await Promise.all(
+    Array.from({ length: concurrency }, () => workerFunc(queue, emit, citiesGrid))
+  );
+}
