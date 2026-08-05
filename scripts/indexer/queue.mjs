@@ -4,7 +4,7 @@ export const createQueue = (maxSize = Infinity) => {
   const putWaiters = [];
   let closed = false;
 
-  return {
+  const api = {
     push: async (item) => {
       if (closed) throw new Error('Queue closed');
       if (items.length >= maxSize) {
@@ -36,28 +36,59 @@ export const createQueue = (maxSize = Infinity) => {
     },
     get length() { return items.length; },
   };
+
+  // Support: for-await-of over the queue
+  api[Symbol.asyncIterator] = function () {
+    const q = this;
+    return {
+      next: async () => {
+        const v = await q.pop();
+        if (v === null) return { done: true };
+        return { value: v, done: false };
+      },
+      return: async () => {
+        q.close();
+        return { done: true };
+      }
+    };
+  };
+
+  return api;
 };
 
 export const createSemaphore = (count) => {
   let available = count;
   const waiters = [];
+  const acquire = () => new Promise(resolve => {
+    if (available > 0) {
+      available -= 1;
+      return resolve();
+    }
+    waiters.push(resolve);
+  });
+
+  const release = () => {
+    available += 1;
+    const next = waiters.shift();
+    if (next) {
+      available -= 1;
+      next();
+    }
+  };
+
+  const withLock = async (fn) => {
+    await acquire();
+    try {
+      return await fn();
+    } finally {
+      release();
+    }
+  };
 
   return {
-    acquire: () => new Promise(resolve => {
-      if (available > 0) {
-        available -= 1;
-        return resolve();
-      }
-      waiters.push(resolve);
-    }),
-    release: () => {
-      available += 1;
-      const next = waiters.shift();
-      if (next) {
-        available -= 1;
-        next();
-      }
-    },
+    acquire,
+    release,
+    withLock,
     get available() { return available; }
   };
 };

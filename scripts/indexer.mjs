@@ -2,9 +2,9 @@
 
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
-import { createOrReadThumbnail } from './indexer/createOrReadThumbnail.mjs';
 import { initOutputDir } from './indexer/initOutputDir.mjs';
 import { loadCitiesFile, loadConfigFromArgv } from './indexer/loadConfig.mjs';
 import { loadExisting } from './indexer/loadExisting.mjs';
@@ -12,6 +12,7 @@ import { convertJSON } from './indexer/ndjsonToJsonMap.mjs';
 import { createProgress } from './indexer/progress.mjs';
 import { createSemaphore } from './indexer/queue.mjs';
 import { readJsonSafe } from './indexer/readJsonSafe.mjs';
+import { createOrReadThumbnail } from './indexer/thumbnails.mjs';
 import { buildCitiesGridCleaned } from './indexer/utils.mjs';
 import { walkStream } from './indexer/walkStream.mjs';
 import { worker } from './indexer/worker.mjs';
@@ -64,7 +65,7 @@ async function main() {
   progress.setPreindexed(existingSet.size);
   console.log(`[discovery] Found ${Array.from(existingSet).length} existing records. Resuming...`);
 
-  const cities = await loadCitiesFile(path.join('scripts/indexer/cities.json'));
+  const cities = await loadCitiesFile(new URL('./indexer/cities.json', import.meta.url));
   const citiesGrid = buildCitiesGridCleaned(cities, 1);
 
   console.log(`[cities] Loaded ${cities.length} cities. Grid size: ${citiesGrid.size}`);
@@ -85,7 +86,9 @@ async function main() {
   console.log('\n✅ done');
 }
 
-main().catch(err => {
-  console.error('\n💥 crash:', err);
-  process.exit(1);
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch(err => {
+    console.error('\n💥 crash:', err);
+    process.exit(1);
+  });
+}

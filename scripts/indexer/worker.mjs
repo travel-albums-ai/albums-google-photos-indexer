@@ -45,7 +45,12 @@ export async function worker(queue, emit, citiesGrid, deps) {
       progress.incDone();
       progress.log();
     } catch (err) {
-      // console.error('\n💥 worker:', err);
+      // Log a concise error message to aid debugging without overwhelming output
+      try {
+        console.error(`\n💥 worker failed for ${full}: ${err && err.message ? err.message : err}`);
+      } catch (e) {
+        console.error('\n💥 worker failed (logging error)');
+      }
       progress.incFailed();
       progress.log();
     }

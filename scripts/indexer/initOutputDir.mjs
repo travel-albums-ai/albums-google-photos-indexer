@@ -38,6 +38,27 @@ export async function initOutputDir(dir) {
       await flush();
   };
 
+  let _shutdownRegistered = false;
+  const _shutdown = async () => {
+    try {
+      await flush();
+    } catch (e) {
+      // ignore flush errors
+    }
+    try {
+      await new Promise(res => stream.end(res));
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  if (!_shutdownRegistered) {
+    _shutdownRegistered = true;
+    process.once('SIGINT', _shutdown);
+    process.once('SIGTERM', _shutdown);
+    process.once('beforeExit', _shutdown);
+  }
+
   return { stream, emit, flush, outFile };
 }
 
