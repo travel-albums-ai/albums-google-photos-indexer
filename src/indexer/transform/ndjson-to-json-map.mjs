@@ -81,6 +81,8 @@ export const convertJSON = (obj, citiesGrid) => {
     social: sharedAlbumComments,
   }
 
-
-  return { [obj.rootIndex + SEPARATOR + folder + SEPARATOR + data.title]: result, result, folder, id: [obj.rootIndex + SEPARATOR + folder + SEPARATOR + data.title] }
+  return {
+    result,
+    id: [obj.rootIndex + SEPARATOR + folder + SEPARATOR + data.title]
+  }
 }

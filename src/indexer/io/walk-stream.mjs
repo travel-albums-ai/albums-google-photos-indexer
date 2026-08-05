@@ -6,6 +6,7 @@ import { SEPARATOR } from '../indexer.mjs';
 export async function walkStream(root, emit, existingSet, citiesGrid, concurrency, workerFunc, progress) {
   const stack = [root];
   const queue = createQueue(concurrency * 200);
+  const base64Root = Buffer.from(root).toString('base64')
 
   console.log(`Scanning for JSON files in ${root}...`, citiesGrid.size ? `Cities grid size: ${citiesGrid.size}` : '');
 
@@ -66,8 +67,10 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
       }
       if (!imageExists) continue;
 
-      const folder = path.basename(path.dirname(full));
-      const id = root + SEPARATOR + folder + SEPARATOR + title;
+      const folder = full.replace(root, '').split("/").slice(0,-1).join("/");
+      const id = base64Root + SEPARATOR + folder + SEPARATOR + title;
+
+      // console.log(`Found JSON file: ${id} {full: ${full.replace(root, '').split("/").slice(0,-1).join("/")}}`);
 
       if (existingSet.has(id)) continue;
 
