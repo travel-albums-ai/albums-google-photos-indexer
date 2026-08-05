@@ -5,18 +5,18 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
-import { createSemaphore } from '../src/indexer/concurrency/queue.mjs';
-import { worker } from '../src/indexer/concurrency/worker.mjs';
-import { createOrReadThumbnail } from '../src/indexer/image/thumbnails.mjs';
-import { CACHE_FOLDER, OUT_FILE } from '../src/indexer/indexer.mjs';
-import { initOutputDir } from '../src/indexer/io/init-output-dir.mjs';
-import { loadCitiesFile, loadConfigFromArgv } from '../src/indexer/io/load-config.mjs';
-import { loadExisting } from '../src/indexer/io/load-existing.mjs';
-import { readJsonSafe } from '../src/indexer/io/read-json-safe.mjs';
-import { walkStream } from '../src/indexer/io/walk-stream.mjs';
-import { createProgress } from '../src/indexer/progress/progress.mjs';
-import { convertJSON } from '../src/indexer/transform/ndjson-to-json-map.mjs';
-import { buildCitiesGridCleaned } from '../src/indexer/utils/build-cities-grid.mjs';
+import { createSemaphore } from './src/indexer/concurrency/queue.mjs';
+import { worker } from './src/indexer/concurrency/worker.mjs';
+import { createOrReadThumbnail } from './src/indexer/image/thumbnails.mjs';
+import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
+import { initOutputDir } from './src/indexer/io/init-output-dir.mjs';
+import { loadCitiesFile, loadConfigFromArgv } from './src/indexer/io/load-config.mjs';
+import { loadExisting } from './src/indexer/io/load-existing.mjs';
+import { readJsonSafe } from './src/indexer/io/read-json-safe.mjs';
+import { walkStream } from './src/indexer/io/walk-stream.mjs';
+import { createProgress } from './src/indexer/progress/progress.mjs';
+import { convertJSON } from './src/indexer/transform/ndjson-to-json-map.mjs';
+import { buildCitiesGridCleaned } from './src/indexer/utils/build-cities-grid.mjs';
 
 const MODE = 'ssd';
 
@@ -61,11 +61,13 @@ async function main() {
   const progress = createProgress(Date.now());
   progress.setPreindexed(existingSet.size);
   console.log(`[discovery] Found ${Array.from(existingSet).length} existing records. Resuming...`);
+  console.log(`===============================`);
 
-  const cities = await loadCitiesFile(new URL('../src/indexer/data/cities.json', import.meta.url));
+  const cities = await loadCitiesFile(new URL('./src/indexer/data/cities.json', import.meta.url));
   const citiesGrid = buildCitiesGridCleaned(cities, 1);
 
   console.log(`[cities] Loaded ${cities.length} cities. Grid size: ${citiesGrid.size}`);
+  console.log(`===============================`);
 
   const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
 
