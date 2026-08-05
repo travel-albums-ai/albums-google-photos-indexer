@@ -1,6 +1,6 @@
 # albums-google-photos-indexer 📸🔎
 
-A small, focused CLI & library for indexing photo albums (Google Photos, local drives) into structured JSON outputs for search, browsing, and offline analysis.
+A small, focused CLI & library for indexing photo albums (local drives) into structured JSON outputs for search, browsing, and offline analysis.
 
 **Overview**
 
@@ -101,42 +101,24 @@ graph LR
 
 **What the project does (concise)**
 
-- Indexes photo collections (local or cloud-backed) into structured JSON; produces thumbnails; supports resuming long-running indexing; creates NDJSON/JSON maps for efficient incremental updates and downstream consumption.
+- Indexes local photo collections into structured JSON; produces thumbnails; supports resuming long-running indexing; creates NDJSON/JSON maps for efficient incremental updates and downstream consumption.
+
 
 **Config examples**
 
-- Minimal `server-config.json` example:
+- Example config file: [examples/server-config.json](examples/server-config.json)
+
+You can re-use the provided example directly. A minimal snippet from that file:
 
 ```json
 {
-	"input": {
-		"type": "local",        
-		"path": "/mnt/photos"
-	},
-	"output": {
-		"dir": "./out",
-		"thumbnails": { "sizes": [200, 400] }
-	},
-	"concurrency": { "workers": 4 },
-	"resume": true
+  "TAKEOUT_ROOT": "/mnt/.../Takeout || C:\\...\\Takeout",
+  "TARGET_ROOT": "/mnt/.../cache || C:\\...\\cache"
+
 }
 ```
 
-- Example for a cloud-backed (Google Photos) run (skeleton):
-
-```json
-{
-	"input": {
-		"type": "google-photos",
-		"credentialsPath": "./credentials.json",
-		"albumFilters": ["family","vacation"]
-	},
-	"output": { "dir": "./out" },
-	"concurrency": { "workers": 8 }
-}
-```
-
-Note: `credentials.json` should follow the provider's OAuth client format. The project does not store secrets by default — load them from env or mounted files.
+Note: This edition focuses on local filesystem indexing. The IO layer is pluggable so new adapters (S3, cloud APIs) can be added later, but there is no cloud-backed adapter included in this repository.
 
 **Install & Run**
 
@@ -156,13 +138,8 @@ npm run indexer:hdd
 3. CLI style (node)
 
 ```bash
-node indexer-cli.mjs --config ./server-config.json
-```
-
-4. Resume a run
-
-```bash
-node indexer-cli.mjs --config ./server-config.json --resume
+# use the example config shipped with the repo
+node indexer-cli.mjs --config ./examples/server-config.json
 ```
 
 **Outputs produced**
@@ -171,9 +148,8 @@ node indexer-cli.mjs --config ./server-config.json --resume
 
 **Extensions & integrations**
 
-- Google Photos: via provider adapter (expects OAuth credentials) — index albums and mediaItems.
-- Local filesystem: streaming walker for directories and mounted drives.
-- Pluggable adapters: the IO layer is designed to accept new `input.type` implementations (S3, Dropbox, etc.) with minimal wiring.
+- Local filesystem: streaming walker for directories and mounted drives (built-in).
+- Pluggable adapters: the IO layer is designed to accept new `input.type` implementations (S3, Dropbox, cloud APIs) with minimal wiring. Note: cloud adapters are not included in this edition.
 
 **How a user would use this**
 
@@ -196,12 +172,3 @@ npm run
 # run linter (if configured)
 npm run lint
 ```
-
-**Need more?**
-
-If you'd like, I can also:
-- add a small example `server-config.json` in `examples/` and a sample `credentials.json.example` for onboarding
-- create a tiny integration test that runs the walker against a fixture directory
-
-— Happy to continue! 🚀
-
