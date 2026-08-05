@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { SEPARATOR } from '../indexer.mjs';
 import { createThumbnailAndPreview } from './createThumbnailAndPreview.mjs';
 import { getSizesAndCreatePreview } from './getSizesAndCreatePreview.mjs';
 
-const SEPARATOR = '::';
 const CACHE_FOLDER = '/thumbnails';
 
 export async function createOrReadThumbnail(outDir, folder, fileName, folderName, sharp) {

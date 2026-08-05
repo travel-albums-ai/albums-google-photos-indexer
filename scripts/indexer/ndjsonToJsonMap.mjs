@@ -34,7 +34,7 @@ function findNearestCity(
     }
   }
 
-  return { name: nearest.name, country: nearest.country};
+  return { city: nearest.name, country: nearest.country};
 }
 
 export const convertJSON = (obj, citiesGrid) => {
@@ -53,6 +53,8 @@ export const convertJSON = (obj, citiesGrid) => {
     sharedAlbumComments,
     photoTakenTime,
     imageViews,
+    people,
+    archived,
     ...restData
   } = data;
 
@@ -61,12 +63,13 @@ export const convertJSON = (obj, citiesGrid) => {
     ...restData,
     ...photoTakenTime,
     id: data.title,
-    ...(imageViews !== 0 && { views: imageViews }),
+    ...(people && { people: people.map(p => p.name) }),
+    ...(imageViews !== 0 && { views: Number(imageViews) }),
     ...(geoData.latitude !== 0 && { latitude: geoData.latitude }),
     ...(geoData.longitude !== 0 && { longitude: geoData.longitude }),
     ...(geoData.latitude !== 0 &&
       geoData.longitude !== 0 && {
-        city: findNearestCity(
+        ...findNearestCity(
           geoData.latitude,
           geoData.longitude,
           Math.floor(geoData.latitude),

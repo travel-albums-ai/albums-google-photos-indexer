@@ -1,25 +1,23 @@
-
 export async function createThumbnailAndPreview(
   inputPath,
   outputPath,
   sharp
 ) {
-  const thumb = sharp(inputPath, {
-    sequentialRead: true,
+  return sharp(inputPath, {
     limitInputPixels: false,
+    sequentialRead: true,
+    failOn: 'none',
   })
-    .resize(550, null, {
+    .resize({
+      width: 550,
       fit: 'inside',
       withoutEnlargement: true,
       kernel: sharp.kernel.linear,
+      fastShrinkOnLoad: true,
     })
     .jpeg({
       quality: 70,
-      mozjpeg: true,
+      mozjpeg: false,
     })
-    .withMetadata(false);
-
-  const result = await thumb.toFile(outputPath);
-
-  return result;
+    .toFile(outputPath);
 }

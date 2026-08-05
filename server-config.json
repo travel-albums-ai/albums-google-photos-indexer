@@ -1,5 +1,5 @@
 {
-  "JSON_PATH": "/mnt/c/Users/bogda/TakeoutSample/cache/metadata.json",
-  "TAKEOUT_ROOT": "/mnt/f/Takeout",
-  "TARGET_ROOT": "/mnt/c/Users/bogda/TakeoutSample/cache"
+  "JSON_PATH": "/mnt/c/Users/bogda/TakeoutSample/cacheNew/metadata.json",
+  "TAKEOUT_ROOT": "/mnt/f/TakeoutSample",
+  "TARGET_ROOT": "/mnt/c/Users/bogda/TakeoutSample/cacheNew"
 }

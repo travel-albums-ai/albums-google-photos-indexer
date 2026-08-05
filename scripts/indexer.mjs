@@ -15,7 +15,7 @@ import { buildCitiesGridCleaned } from './indexer/utils.mjs';
 import { walkStream } from './indexer/walkStream.mjs';
 import { worker } from './indexer/worker.mjs';
 
-export const SEPARATOR = '::';
+export const SEPARATOR = '__';
 
 const MODE = 'ssd';
 
@@ -58,10 +58,12 @@ async function main() {
   progress.setPreindexed(existingSet.size);
   console.log(`Found ${Array.from(existingSet).length} existing records. Resuming...`);
 
-  const cities = await loadCitiesFile(path.join('cities.json'));
+  const cities = await loadCitiesFile(path.join('scripts/indexer/cities.json'));
   const citiesGrid = buildCitiesGridCleaned(cities, 1);
 
-  const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp };
+  console.log(`Loaded ${cities.length} cities. Grid size: ${citiesGrid.size}, ${path.join('cities.json')}`);
+
+  const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
 
   const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, deps);
 

@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 export async function worker(queue, emit, citiesGrid, deps) {
-  const { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir, sharp } = deps;
+  const { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir, sharp, ROOT } = deps;
 
   while (true) {
     const item = queue.pop();
@@ -25,6 +25,7 @@ export async function worker(queue, emit, citiesGrid, deps) {
 
       record.width = width;
       record.height = height;
+      record.absolutePath = full.replace(ROOT, '').replace(/\\/g, '/').split('/').slice(1,-1).join('/')
 
       const { result, id } = convertJSON(record, citiesGrid);
 

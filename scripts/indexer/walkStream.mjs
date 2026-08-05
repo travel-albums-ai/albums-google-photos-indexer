@@ -1,5 +1,6 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
+import { SEPARATOR } from '../indexer.mjs';
 import { createQueue } from './queue.mjs';
 
 export async function walkStream(root, emit, existingSet, citiesGrid, concurrency, workerFunc, progress) {
@@ -22,7 +23,7 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
         continue;
       }
 
-      const id = full.split('/').slice(-2).join('/').split('.').slice(0, -2).join('.').replace(/\//g, '::');
+      const id = full.split('/').slice(-2).join('/').split('.').slice(0, -2).join('.').replace(/\//g, SEPARATOR);
 
       if (!e.isFile() || existingSet.has(id) || !/\.json$/i.test(e.name))
         continue;
