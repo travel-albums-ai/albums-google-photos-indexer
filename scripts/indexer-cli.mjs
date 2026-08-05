@@ -5,21 +5,18 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
-import { initOutputDir } from './indexer/initOutputDir.mjs';
-import { loadCitiesFile, loadConfigFromArgv } from './indexer/loadConfig.mjs';
-import { loadExisting } from './indexer/loadExisting.mjs';
-import { convertJSON } from './indexer/ndjsonToJsonMap.mjs';
-import { createProgress } from './indexer/progress.mjs';
-import { createSemaphore } from './indexer/queue.mjs';
-import { readJsonSafe } from './indexer/readJsonSafe.mjs';
-import { createOrReadThumbnail } from './indexer/thumbnails.mjs';
-import { buildCitiesGridCleaned } from './indexer/utils.mjs';
-import { walkStream } from './indexer/walkStream.mjs';
-import { worker } from './indexer/worker.mjs';
-
-export const SEPARATOR = '__';
-export const CACHE_FOLDER = 'thumbnails';
-export const OUT_FILE = 'metadata.json';
+import { initOutputDir } from '../src/indexer/initOutputDir.mjs';
+import { loadCitiesFile, loadConfigFromArgv } from '../src/indexer/loadConfig.mjs';
+import { loadExisting } from '../src/indexer/loadExisting.mjs';
+import { convertJSON } from '../src/indexer/ndjsonToJsonMap.mjs';
+import { createProgress } from '../src/indexer/progress.mjs';
+import { createSemaphore } from '../src/indexer/queue.mjs';
+import { readJsonSafe } from '../src/indexer/readJsonSafe.mjs';
+import { createOrReadThumbnail } from '../src/indexer/thumbnails.mjs';
+import { buildCitiesGridCleaned } from '../src/indexer/utils.mjs';
+import { walkStream } from '../src/indexer/walkStream.mjs';
+import { worker } from '../src/indexer/worker.mjs';
+import { CACHE_FOLDER, OUT_FILE } from '../src/indexer/indexer.mjs';
 
 const MODE = 'ssd';
 

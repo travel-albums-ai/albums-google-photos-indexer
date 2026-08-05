@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
-import { CACHE_FOLDER, OUT_FILE } from '../indexer.mjs';
+import { CACHE_FOLDER, OUT_FILE } from './indexer.mjs';
 
 export async function initOutputDir(dir) {
   await fsp.mkdir(dir, { recursive: true });
@@ -61,5 +61,3 @@ export async function initOutputDir(dir) {
 
   return { stream, emit, flush, outFile };
 }
-
-export { CACHE_FOLDER };

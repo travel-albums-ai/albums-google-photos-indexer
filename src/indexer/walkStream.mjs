@@ -1,6 +1,6 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
-import { SEPARATOR } from '../indexer.mjs';
+import { SEPARATOR } from './indexer.mjs';
 import { createQueue } from './queue.mjs';
 
 export async function walkStream(root, emit, existingSet, citiesGrid, concurrency, workerFunc, progress) {
