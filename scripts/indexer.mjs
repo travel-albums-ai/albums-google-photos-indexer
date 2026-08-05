@@ -17,6 +17,7 @@ import { worker } from './indexer/worker.mjs';
 
 export const SEPARATOR = '__';
 export const CACHE_FOLDER = '/thumbnails';
+export const OUT_FILE = 'metadata.json';
 
 const MODE = 'ssd';
 
@@ -51,18 +52,21 @@ async function main() {
   console.log(`Concurrency: ${CONCURRENCY}`);
   console.log(`Sharp: ${ACTIVE_CONFIG.sharp}`);
   console.log(`Output: ${OUT_DIR}`);
+  console.log(`Output Thumbnails: ${OUT_DIR}/${CACHE_FOLDER}`);
+  console.log(`Output JSON: ${OUT_DIR}/${OUT_FILE}`);
+  console.log(`===============================`);
 
   const { stream, emit, flush, outFile } = await initOutputDir(OUT_DIR);
 
   const existingSet = await loadExisting(outFile);
   const progress = createProgress(Date.now());
   progress.setPreindexed(existingSet.size);
-  console.log(`Found ${Array.from(existingSet).length} existing records. Resuming...`);
+  console.log(`[discovery] Found ${Array.from(existingSet).length} existing records. Resuming...`);
 
   const cities = await loadCitiesFile(path.join('scripts/indexer/cities.json'));
   const citiesGrid = buildCitiesGridCleaned(cities, 1);
 
-  console.log(`Loaded ${cities.length} cities. Grid size: ${citiesGrid.size}, ${path.join('cities.json')}`);
+  console.log(`[cities] Loaded ${cities.length} cities. Grid size: ${citiesGrid.size}`);
 
   const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
 

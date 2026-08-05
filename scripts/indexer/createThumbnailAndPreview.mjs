@@ -3,7 +3,7 @@ export async function createThumbnailAndPreview(
   outputPath,
   sharp
 ) {
-  return sharp(inputPath, {
+  return await sharp(inputPath, {
     limitInputPixels: false,
     sequentialRead: true,
     failOn: 'none',
