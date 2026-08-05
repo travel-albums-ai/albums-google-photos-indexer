@@ -10,11 +10,11 @@ import { loadCitiesFile, loadConfigFromArgv } from './indexer/loadConfig.mjs';
 import { loadExisting } from './indexer/loadExisting.mjs';
 import { convertJSON } from './indexer/ndjsonToJsonMap.mjs';
 import { createProgress } from './indexer/progress.mjs';
+import { createSemaphore } from './indexer/queue.mjs';
 import { readJsonSafe } from './indexer/readJsonSafe.mjs';
 import { buildCitiesGridCleaned } from './indexer/utils.mjs';
 import { walkStream } from './indexer/walkStream.mjs';
 import { worker } from './indexer/worker.mjs';
-import { createSemaphore } from './indexer/queue.mjs';
 
 export const SEPARATOR = '__';
 export const CACHE_FOLDER = 'thumbnails';
