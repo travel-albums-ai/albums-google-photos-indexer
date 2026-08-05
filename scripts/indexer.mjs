@@ -16,6 +16,7 @@ import { walkStream } from './indexer/walkStream.mjs';
 import { worker } from './indexer/worker.mjs';
 
 export const SEPARATOR = '__';
+export const CACHE_FOLDER = '/thumbnails';
 
 const MODE = 'ssd';
 

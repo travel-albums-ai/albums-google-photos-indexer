@@ -1,13 +1,9 @@
 
 export async function getSizesAndCreatePreview(inputPath, sharp) {
-  const image = sharp(inputPath, {
+  const metadata = await sharp(inputPath, {
     sequentialRead: true,
     limitInputPixels: false,
-  });
-
-  const [metadata] = await Promise.all([
-    image.metadata(),
-  ]);
+  }).metadata();
 
   return {
     width: metadata.width,
