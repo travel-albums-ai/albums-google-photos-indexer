@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { SEPARATOR } from '../indexer.mjs';
 
 function safeDecode(input) {
   if (!input || typeof input !== 'string') return input;
@@ -39,6 +40,18 @@ export async function worker(queue, emit, citiesGrid, deps) {
       const filename = safeDecode(rawFilename);
       const folderName = safeDecode(full.split('/').slice(-2, -1).join('/'));
 
+      // Relative path from the discovery root to preserve folder structure
+      let relPath = '';
+      try {
+        relPath = path.relative(ROOT, folder).replace(/\\/g, '/');
+        if (relPath.startsWith('..')) relPath = path.basename(folder);
+      } catch (e) {
+        relPath = path.basename(folder);
+      }
+
+      // File-friendly index for the discovery root literal
+      const rootIndex = (path.basename(ROOT) || 'root').replace(/[^a-zA-Z0-9-_]/g, SEPARATOR) || 'root';
+
       let width = 0, height = 0;
 
       const ext = path.extname(filename).toLowerCase();
@@ -48,12 +61,12 @@ export async function worker(queue, emit, citiesGrid, deps) {
         if (transformPool) {
           await transformPool.acquire();
           try {
-            ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp));
+            ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath));
           } finally {
             transformPool.release();
           }
         } else {
-          ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp));
+          ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath));
         }
       } else {
         // Non-image media: log it and continue without thumbnail creation

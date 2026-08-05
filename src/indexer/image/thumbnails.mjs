@@ -1,6 +1,6 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
-import { CACHE_FOLDER, SEPARATOR } from '../indexer.mjs';
+import { CACHE_FOLDER } from '../indexer.mjs';
 
 export async function getSizesAndCreatePreview(inputPath, sharp) {
   const metadata = await sharp(inputPath, {
@@ -38,8 +38,27 @@ export async function createThumbnailAndPreview(
     .toFile(outputPath);
 }
 
-export async function createOrReadThumbnail(outDir, folder, fileName, folderName, sharp) {
-  const thumbPath = path.join(outDir, CACHE_FOLDER, folderName + SEPARATOR + fileName);
+export async function createOrReadThumbnail(
+  outDir,
+  folder,
+  fileName,
+  folderName,
+  sharp,
+  rootIndex = 'root',
+  relPath = ''
+) {
+  // Ensure relative path is safe and not escaping the root
+  let safeRel = relPath || '';
+  if (typeof safeRel === 'string') {
+    safeRel = safeRel.replace(/\\/g, path.sep);
+    if (safeRel.startsWith('..')) safeRel = folderName;
+  } else {
+    safeRel = folderName;
+  }
+
+  const thumbPath = path.join(outDir, CACHE_FOLDER, rootIndex, safeRel, fileName);
+  await fsp.mkdir(path.dirname(thumbPath), { recursive: true });
+
   try {
     await fsp.access(thumbPath);
     return getSizesAndCreatePreview(thumbPath, sharp);
