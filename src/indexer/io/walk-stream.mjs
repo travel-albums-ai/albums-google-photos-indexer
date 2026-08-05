@@ -1,16 +1,14 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
-import { SEPARATOR } from './indexer.mjs';
-import { createQueue } from './queue.mjs';
+import { createQueue } from '../concurrency/queue.mjs';
+import { SEPARATOR } from '../indexer.mjs';
 
 export async function walkStream(root, emit, existingSet, citiesGrid, concurrency, workerFunc, progress) {
   const stack = [root];
-  // bounded queue to avoid excessive memory usage during large scans
   const queue = createQueue(concurrency * 200);
 
   console.log(`Scanning for JSON files in ${root}...`, citiesGrid.size ? `Cities grid size: ${citiesGrid.size}` : '');
 
-  // start worker pool before producing so work happens while scanning
   const workers = Array.from({ length: concurrency }, () => workerFunc(queue, emit, citiesGrid));
 
   while (stack.length) {
@@ -40,7 +38,6 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
     }
   }
 
-  // signal no more items and wait for workers to finish
   queue.close();
   await Promise.all(workers);
 }

@@ -1,4 +1,4 @@
-import { recordProgress } from './recordProgress.mjs';
+import { recordProgress } from './record-progress.mjs';
 
 export function createProgress(startTime) {
   let totalFound = 0, totalFiles = 0, done = 0, preindexed = 0, failed = 0;

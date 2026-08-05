@@ -1,4 +1,4 @@
-import { SEPARATOR } from './indexer.mjs';
+import { SEPARATOR } from '../indexer.mjs';
 
 function cellKey(latCell, lonCell) {
   return `${latCell}:${lonCell}`;

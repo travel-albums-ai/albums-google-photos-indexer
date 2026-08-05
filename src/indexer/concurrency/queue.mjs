@@ -37,7 +37,6 @@ export const createQueue = (maxSize = Infinity) => {
     get length() { return items.length; },
   };
 
-  // Support: for-await-of over the queue
   api[Symbol.asyncIterator] = function () {
     const q = this;
     return {

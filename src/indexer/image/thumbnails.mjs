@@ -1,6 +1,6 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
-import { CACHE_FOLDER, SEPARATOR } from './indexer.mjs';
+import { CACHE_FOLDER, SEPARATOR } from '../indexer.mjs';
 
 export async function getSizesAndCreatePreview(inputPath, sharp) {
   const metadata = await sharp(inputPath, {
