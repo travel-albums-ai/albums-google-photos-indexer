@@ -4,8 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "#-----RUNNING------": "",
-    "indexer:hdd": "node indexer-cli.mjs --config server-config.json"
+    "indexer:hdd": "time node indexer-cli.mjs --config server-config.json"
   },
   "dependencies": {
     "driver.js": "^1.8.0",
