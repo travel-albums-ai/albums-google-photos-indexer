@@ -16,8 +16,8 @@ flowchart TD
     Worker --> ReadJson["readJsonSafe(file) -> parsed record"]
     ReadJson --> CreateThumb["createOrReadThumbnail(outDir, folder, title)"]
     CreateThumb --> ThumbCacheCheck{"thumb exists?"}
-    ThumbCacheCheck -->|yes| GetSizes[getSizesAndCreatePreview(path)]
-    ThumbCacheCheck -->|no| MakeThumb[createThumbnailAndPreview(input, thumbPath)]
+    ThumbCacheCheck -->|yes| GetSizes["getSizesAndCreatePreview(path)"]
+    ThumbCacheCheck -->|no| MakeThumb["createThumbnailAndPreview(input, thumbPath)"]
     GetSizes --> Convert["convertJSON(record, citiesGrid)"]
     MakeThumb --> GetSizes
     Convert --> Emit["emit({id: result}) -> writer batches lines"]
