@@ -8,7 +8,7 @@ This repository contains a small indexer that scans a Google Takeout export (JSO
 flowchart TD
 
   subgraph ORCH[Orchestrator]
-    ORCH_main[indexer.mjs\n- main orchestration: load config, init output, loadExisting, build cities grid, create pools, start walkStream]
+    ORCH_main["[indexer]\nload config\n init output\n loadExisting\n build cities grid\n create pools\n start walkStream"]
   end
 
   subgraph INIT[Initialization & Config]
@@ -61,8 +61,10 @@ flowchart TD
   EMIT --> OUT
 
   %% notes
-  classDef fileLabel fill:#f9f,stroke:#333,stroke-width:1px;
-  class ORCH_main,CFG,OUT,EXIST,CITIES,WALK,Q,SEM,W,RJ,TH,MAP,PROG,EMIT,TH_CACHE fileLabel;
+  classDef fileLabel fill:#fF9Ff,stroke:#333,stroke-width:1px;
+  classDef mainLabel fill:#000,stroke:#333,stroke-width:1px;
+  class ORCH_main mainLabel;
+  class CFG,OUT,EXIST,CITIES,WALK,Q,SEM,W,RJ,TH,MAP,PROG,EMIT,TH_CACHE fileLabel;
 
   %% end
 ```
