@@ -1,0 +1,42 @@
+{
+  "name": "albums-google-photos-indexer",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "#-----RUNNING------": "",
+    "indexer:hdd": "node scripts/indexer.mjs --config server-config.json"
+  },
+  "dependencies": {
+    "driver.js": "^1.8.0",
+    "exifr": "^7.1.3",
+    "p-limit": "^7.3.1",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "bun": "^1.3.14",
+    "@eslint/js": "^10.0.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "concurrently": "^10.0.4",
+    "conventional-changelog-conventionalcommits": "^9.3.1",
+    "esbuild": "^0.28.1",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.8.0",
+    "knip": "^6.30.0",
+    "rollup-plugin-visualizer": "latest",
+    "semantic-release": "^24.2.9",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.66.0"
+  }
+}

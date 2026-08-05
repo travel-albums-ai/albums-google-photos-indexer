@@ -1,0 +1,83 @@
+import { SEPARATOR } from '../indexer.mjs';
+
+function cellKey(latCell, lonCell) {
+  return `${latCell}:${lonCell}`;
+}
+
+function findNearestCity(
+  lat,
+  lon,
+  baseLat,
+  baseLon,
+  citiesGrid
+) {
+  let nearest = null;
+  let minDistSq = Infinity;
+
+  for (let dy = -1; dy <= 1; dy++) {
+    for (let dx = -1; dx <= 1; dx++) {
+      const candidates = citiesGrid.get(cellKey(baseLat + dy, baseLon + dx));
+      if (!candidates) continue;
+
+      for (let i = 0; i < candidates.length; i++) {
+        const a = candidates[i];
+
+        const dLat = a.lat - lat;
+        const dLon = a.lng - lon;
+        const distSq = dLat * dLat + dLon * dLon;
+
+        if (distSq < minDistSq) {
+          minDistSq = distSq;
+          nearest = a;
+        }
+      }
+    }
+  }
+
+  return { name: nearest.name, country: nearest.country};
+}
+
+export const convertJSON = (obj, citiesGrid) => {
+  const folder = obj.path.split("/").slice(-2, -1)[0];
+  const { data, type, path, name, ...rest } = obj;
+
+  const {
+    geoDataExif,
+    geoData,
+    googlePhotosOrigin,
+    appSource,
+    description,
+    creationTime,
+    url,
+    title,
+    sharedAlbumComments,
+    photoTakenTime,
+    imageViews,
+    ...restData
+  } = data;
+
+  const result = {
+    ...rest,
+    ...restData,
+    ...photoTakenTime,
+    id: data.title,
+    ...(imageViews !== 0 && { views: imageViews }),
+    ...(geoData.latitude !== 0 && { latitude: geoData.latitude }),
+    ...(geoData.longitude !== 0 && { longitude: geoData.longitude }),
+    ...(geoData.latitude !== 0 &&
+      geoData.longitude !== 0 && {
+        city: findNearestCity(
+          geoData.latitude,
+          geoData.longitude,
+          Math.floor(geoData.latitude),
+          Math.floor(geoData.longitude),
+          citiesGrid
+        ),
+      }),
+    folder,
+    social: sharedAlbumComments,
+  }
+
+
+  return { [folder + SEPARATOR + data.title]: result, result, folder, id: [folder + SEPARATOR + data.title] }
+}
