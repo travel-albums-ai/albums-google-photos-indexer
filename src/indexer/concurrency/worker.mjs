@@ -20,6 +20,7 @@ const IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.tif', '.tiff', '
 
 export async function worker(queue, emit, citiesGrid, deps) {
   const { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir, sharp, ROOT, transformPool } = deps;
+  const base64Root = Buffer.from(ROOT).toString('base64')
 
   while (true) {
     const item = await queue.pop();
@@ -76,7 +77,7 @@ export async function worker(queue, emit, citiesGrid, deps) {
       record.width = width;
       record.height = height;
       record.relativePath = relPath;
-      record.rootIndex = Buffer.from(ROOT).toString('base64');
+      record.rootIndex = base64Root;
 
       const { result, id } = convertJSON(record, citiesGrid);
 

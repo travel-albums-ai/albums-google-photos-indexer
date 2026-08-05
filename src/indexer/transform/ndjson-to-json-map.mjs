@@ -38,7 +38,6 @@ function findNearestCity(
 }
 
 export const convertJSON = (obj, citiesGrid) => {
-  // const folder = obj.path.split("/").slice(-2, -1)[0];
   const { data, relativePath, type, path, name, ...rest } = obj;
   const folder = relativePath
 
@@ -83,5 +82,5 @@ export const convertJSON = (obj, citiesGrid) => {
   }
 
 
-  return { [folder + SEPARATOR + data.title]: result, result, folder, id: [folder + SEPARATOR + data.title] }
+  return { [obj.rootIndex + SEPARATOR + folder + SEPARATOR + data.title]: result, result, folder, id: [obj.rootIndex + SEPARATOR + folder + SEPARATOR + data.title] }
 }
