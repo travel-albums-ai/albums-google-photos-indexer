@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { createQueue } from '../concurrency/queue.mjs';
@@ -67,11 +68,28 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
       if (!imageExists) continue;
 
       const folder = path.basename(path.dirname(full));
-      const id = folder + SEPARATOR + title;
 
-      if (existingSet.has(id)) continue;
+      const slugifyKey = (s) => {
+        if (!s || typeof s !== 'string') return '';
+        return s
+          .normalize('NFKD')
+          .replace(/[^\w\s-]/g, '')
+          .trim()
+          .replace(/[\s_]+/g, '-')
+          .replace(/-+/g, '-')
+          .toLowerCase();
+      };
 
-      existingSet.add(id);
+      const rawTitle = title || '';
+      const safeTitle = slugifyKey(rawTitle) || 'untitled';
+      const safeFolder = slugifyKey(folder) || 'root';
+      const shortHash = crypto.createHash('sha1').update(String(full)).digest('hex').slice(0, 8);
+      const newId = `${safeFolder}${SEPARATOR}${safeTitle}${SEPARATOR}${shortHash}`;
+      const oldId = folder + SEPARATOR + title;
+
+      if (existingSet.has(newId) || existingSet.has(oldId)) continue;
+
+      existingSet.add(newId);
       progress.addFound(); progress.addFile(1);
       progress.log();
 
