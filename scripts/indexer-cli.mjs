@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
+import { CACHE_FOLDER, OUT_FILE } from '../src/indexer/indexer.mjs';
 import { initOutputDir } from '../src/indexer/initOutputDir.mjs';
 import { loadCitiesFile, loadConfigFromArgv } from '../src/indexer/loadConfig.mjs';
 import { loadExisting } from '../src/indexer/loadExisting.mjs';
@@ -16,7 +17,6 @@ import { createOrReadThumbnail } from '../src/indexer/thumbnails.mjs';
 import { buildCitiesGridCleaned } from '../src/indexer/utils.mjs';
 import { walkStream } from '../src/indexer/walkStream.mjs';
 import { worker } from '../src/indexer/worker.mjs';
-import { CACHE_FOLDER, OUT_FILE } from '../src/indexer/indexer.mjs';
 
 const MODE = 'ssd';
 
