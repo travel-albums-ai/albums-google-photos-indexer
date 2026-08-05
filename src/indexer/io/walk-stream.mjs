@@ -36,7 +36,7 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
       }
 
       const title = data && data.title;
-      if (!title || !/\.(jpe?g|png|gif)$/i.test(title)) continue;
+      if (!title || !/\.(jpe?g|png|gif|webp|tiff|avif)$/i.test(title)) continue;
 
       function safeDecode(input) {
         if (!input || typeof input !== 'string') return input;
