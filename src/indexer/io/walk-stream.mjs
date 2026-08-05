@@ -67,10 +67,8 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
       }
       if (!imageExists) continue;
 
-      const folder = full.replace(root, '').split("/").slice(0,-1).join("/");
+      const folder = full.replace(root, '').split("/").slice(1,-1).join("/");
       const id = base64Root + SEPARATOR + folder + SEPARATOR + title;
-
-      // console.log(`Found JSON file: ${id} {full: ${full.replace(root, '').split("/").slice(0,-1).join("/")}}`);
 
       if (existingSet.has(id)) continue;
 
