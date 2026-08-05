@@ -43,10 +43,23 @@ sharp.concurrency(ACTIVE_CONFIG.sharp);
 async function main() {
   const cfg = await loadConfigFromArgv();
 
-  const ROOT = path.resolve(cfg.TAKEOUT_ROOT);
   const OUT_DIR = path.resolve(cfg.TARGET_ROOT);
 
-  console.log(`Scanning: ${ROOT}`);
+  // Support multiple roots via TAKEOUT_ROOTS, fall back to TAKEOUT_ROOT for backward compatibility
+  const TAKEOUT_ROOTS = Array.isArray(cfg.TAKEOUT_ROOTS)
+    ? cfg.TAKEOUT_ROOTS
+    : cfg.TAKEOUT_ROOT
+      ? [cfg.TAKEOUT_ROOT]
+      : [];
+
+  if (!TAKEOUT_ROOTS.length) {
+    console.error('No TAKEOUT_ROOTS or TAKEOUT_ROOT configured. Provide at least one root to scan.');
+    process.exit(1);
+  }
+
+  const resolvedRoots = TAKEOUT_ROOTS.map(r => path.resolve(r));
+
+  console.log(`Scanning roots: ${resolvedRoots.join(', ')}`);
   console.log(`Mode: ${MODE}`);
   console.log(`Concurrency: ${CONCURRENCY}`);
   console.log(`Sharp: ${ACTIVE_CONFIG.sharp}`);
@@ -69,15 +82,18 @@ async function main() {
   console.log(`[cities] Loaded ${cities.length} cities. Grid size: ${citiesGrid.size}`);
   console.log(`===============================`);
 
-  const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
-
   // create a transform semaphore sized to the sharp concurrency to bound in-flight image transforms
   const transformPool = createSemaphore(ACTIVE_CONFIG.sharp);
-  const depsWithPool = { ...deps, transformPool };
 
-  const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
+  for (const ROOT of resolvedRoots) {
+    console.log(`\n[discovery] Scanning: ${ROOT}`);
 
-  await walkStream(ROOT, emit, existingSet, citiesGrid, CONCURRENCY, workerFunc, progress);
+    const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
+    const depsWithPool = { ...deps, transformPool };
+    const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
+
+    await walkStream(ROOT, emit, existingSet, citiesGrid, CONCURRENCY, workerFunc, progress);
+  }
 
   await flush();
   await new Promise(r => stream.end(r));

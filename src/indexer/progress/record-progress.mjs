@@ -12,6 +12,6 @@ export function recordProgress(done, totalFiles, startTime, preindexed, failed) 
   const total = totalFiles + preindexed;
 
   process.stdout.write(
-    `\rprocessed: ${done} | total: ${String(total)} | generated: ${preindexed} | skipped: ${String(Math.max(total - done - preindexed, 0))} | failed: ${failed} | img/s: ${imgsPerSec} | ETA: ${eta}`
+    `\rprocessed: ${done} | total: ${String(total)} | preindexed: ${preindexed} | pending: ${String(Math.max(total - done - preindexed, 0))} | failed: ${failed} | img/s: ${imgsPerSec} | ETA: ${eta}`
   )
 }
