@@ -6,6 +6,22 @@
   "scripts": {
     "indexer": "time node indexer-cli.mjs --config server-config.json"
   },
+  "main": "indexer-cli.mjs",
+  "files": [
+    "indexer-cli.mjs",
+    "src/"
+  ],
+  "bin": {
+    "indexer": "indexer-cli.mjs"
+  },
+  "exports": {
+    ".": {
+      "import": "./indexer-cli.mjs",
+      "require": "./indexer-cli.mjs"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
   "dependencies": {
     "driver.js": "^1.8.0",
     "exifr": "^7.1.3",

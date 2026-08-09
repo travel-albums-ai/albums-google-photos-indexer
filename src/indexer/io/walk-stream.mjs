@@ -3,7 +3,7 @@ import path from 'node:path';
 import { createQueue } from '../concurrency/queue.mjs';
 import { SEPARATOR } from '../indexer.mjs';
 
-export async function walkStream(root, emit, existingSet, citiesGrid, concurrency, workerFunc, progress) {
+export async function walkStream(root, emit, existingSet, citiesGrid, concurrency, workerFunc, progress, signal) {
   const stack = [root];
   const queue = createQueue(concurrency * 200);
   const base64Root = Buffer.from(root).toString('base64')
@@ -12,13 +12,14 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
 
   const workers = Array.from({ length: concurrency }, () => workerFunc(queue, emit, citiesGrid));
 
-  while (stack.length) {
+  while (stack.length && !(signal && signal.aborted)) {
     const dir = stack.pop();
 
     let dh;
     try { dh = await fsp.opendir(dir); } catch { continue; }
 
     for await (const e of dh) {
+      if (signal && signal.aborted) break;
       const full = path.join(dir, e.name);
 
       if (e.isDirectory()) {
@@ -77,6 +78,7 @@ export async function walkStream(root, emit, existingSet, citiesGrid, concurrenc
       progress.log();
 
       await queue.push({ full, e });
+      if (signal && signal.aborted) break;
     }
   }
 

@@ -40,8 +40,16 @@ const CONCURRENCY = ACTIVE_CONFIG.concurrency;
 sharp.cache(ACTIVE_CONFIG.cache);
 sharp.concurrency(ACTIVE_CONFIG.sharp);
 
-async function main() {
-  const cfg = await loadConfigFromArgv();
+let _CURRENT_CONTROLLER = null;
+let _CURRENT_DONE = null;
+
+export async function start(opts = {}) {
+  if (_CURRENT_CONTROLLER) throw new Error('Indexer already running');
+  const controller = new AbortController();
+  _CURRENT_CONTROLLER = controller;
+
+  const cfg = opts.cfg || await loadConfigFromArgv();
+  const signal = controller.signal;
 
   const OUT_DIR = path.resolve(cfg.TARGET_ROOT);
 
@@ -85,25 +93,42 @@ async function main() {
   // create a transform semaphore sized to the sharp concurrency to bound in-flight image transforms
   const transformPool = createSemaphore(ACTIVE_CONFIG.sharp);
 
-  for (const ROOT of resolvedRoots) {
-    console.log(`\n[discovery] Scanning: ${ROOT}`);
+  try {
+    for (const ROOT of resolvedRoots) {
+      if (signal.aborted) break;
+      console.log(`\n[discovery] Scanning: ${ROOT}`);
 
-    const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
-    const depsWithPool = { ...deps, transformPool };
-    const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
+      const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
+      const depsWithPool = { ...deps, transformPool };
+      const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
 
-    await walkStream(ROOT, emit, existingSet, citiesGrid, CONCURRENCY, workerFunc, progress);
+      await walkStream(ROOT, emit, existingSet, citiesGrid, CONCURRENCY, workerFunc, progress, signal);
+    }
+
+    await flush();
+    await new Promise(r => stream.end(r));
+
+    if (!signal.aborted) console.log('\n✅ done');
+    else console.log('\n⏸️ stopped');
+  } finally {
+    _CURRENT_CONTROLLER = null;
   }
-
-  await flush();
-  await new Promise(r => stream.end(r));
-
-  console.log('\n✅ done');
 }
 
+export function stop() {
+  if (_CURRENT_CONTROLLER) _CURRENT_CONTROLLER.abort();
+}
+
+export default start;
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  main().catch(err => {
-    console.error('\n💥 crash:', err);
-    process.exit(1);
-  });
+  (async () => {
+    try {
+      _CURRENT_DONE = start();
+      await _CURRENT_DONE;
+    } catch (err) {
+      console.error('\n💥 crash:', err);
+      process.exit(1);
+    }
+  })();
 }
