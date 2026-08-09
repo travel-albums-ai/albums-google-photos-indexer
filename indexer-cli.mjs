@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
+import EventEmitter from 'node:events';
 import { createSemaphore } from './src/indexer/concurrency/queue.mjs';
 import { worker } from './src/indexer/concurrency/worker.mjs';
 import { createOrReadThumbnail } from './src/indexer/image/thumbnails.mjs';
@@ -17,7 +18,6 @@ import { walkStream } from './src/indexer/io/walk-stream.mjs';
 import { createProgress } from './src/indexer/progress/progress.mjs';
 import { convertJSON } from './src/indexer/transform/ndjson-to-json-map.mjs';
 import { buildCitiesGridCleaned } from './src/indexer/utils/build-cities-grid.mjs';
-import EventEmitter from 'node:events';
 
 const MODE = 'ssd';
 
