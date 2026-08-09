@@ -158,6 +158,25 @@ node indexer-cli.mjs --config ./examples/server-config.json
 3. Run `npm run indexer:hdd` or `node indexer-cli.mjs --config ./server-config.json`.
 4. After run, consume `./out/*.json` (maps) and `./out/thumbnails` in your frontend or analysis pipeline.
 
+**Programmatic usage**
+
+You can import and control the indexer from other Node modules. `start()` returns an object with a `done` promise and a `stop()` function:
+
+```javascript
+import start, { stop as stopGlobal } from 'albums-google-photos-indexer';
+
+// start programmatically with an explicit config
+const controller = start({ cfg: { TAKEOUT_ROOTS: ['.'], TARGET_ROOT: './.test-output' } });
+
+// stop via the returned handle
+setTimeout(() => controller.stop(), 200);
+
+// or use the global stop helper
+setTimeout(() => stopGlobal(), 200);
+
+await controller.done; // resolves when indexing finishes or is stopped
+```
+
 **Developer notes / extensibility**
 
 - Add a new adapter: implement an `input` adapter under `src/indexer/io` that emits a unified event stream consumed by `indexer.mjs`.

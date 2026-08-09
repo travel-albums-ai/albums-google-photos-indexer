@@ -43,15 +43,17 @@ sharp.concurrency(ACTIVE_CONFIG.sharp);
 let _CURRENT_CONTROLLER = null;
 let _CURRENT_DONE = null;
 
-export async function start(opts = {}) {
+export function start(opts = {}) {
   if (_CURRENT_CONTROLLER) throw new Error('Indexer already running');
   const controller = new AbortController();
   _CURRENT_CONTROLLER = controller;
 
-  const cfg = opts.cfg || await loadConfigFromArgv();
   const signal = controller.signal;
 
-  const OUT_DIR = path.resolve(cfg.TARGET_ROOT);
+  const run = (async () => {
+    const cfg = opts.cfg || await loadConfigFromArgv();
+
+    const OUT_DIR = path.resolve(cfg.TARGET_ROOT);
 
   // Support multiple roots via TAKEOUT_ROOTS, fall back to TAKEOUT_ROOT for backward compatibility
   const TAKEOUT_ROOTS = Array.isArray(cfg.TAKEOUT_ROOTS)
@@ -93,26 +95,32 @@ export async function start(opts = {}) {
   // create a transform semaphore sized to the sharp concurrency to bound in-flight image transforms
   const transformPool = createSemaphore(ACTIVE_CONFIG.sharp);
 
-  try {
-    for (const ROOT of resolvedRoots) {
-      if (signal.aborted) break;
-      console.log(`\n[discovery] Scanning: ${ROOT}`);
+    try {
+      for (const ROOT of resolvedRoots) {
+        if (signal.aborted) break;
+        console.log(`\n[discovery] Scanning: ${ROOT}`);
 
-      const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
-      const depsWithPool = { ...deps, transformPool };
-      const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
+        const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
+        const depsWithPool = { ...deps, transformPool };
+        const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
 
-      await walkStream(ROOT, emit, existingSet, citiesGrid, CONCURRENCY, workerFunc, progress, signal);
+        await walkStream(ROOT, emit, existingSet, citiesGrid, CONCURRENCY, workerFunc, progress, signal);
+      }
+
+      await flush();
+      await new Promise(r => stream.end(r));
+
+      if (!signal.aborted) console.log('\n✅ done');
+      else console.log('\n⏸️ stopped');
+    } finally {
+      _CURRENT_CONTROLLER = null;
     }
+  })();
 
-    await flush();
-    await new Promise(r => stream.end(r));
-
-    if (!signal.aborted) console.log('\n✅ done');
-    else console.log('\n⏸️ stopped');
-  } finally {
-    _CURRENT_CONTROLLER = null;
-  }
+  return {
+    done: run,
+    stop: () => controller.abort(),
+  };
 }
 
 export function stop() {
