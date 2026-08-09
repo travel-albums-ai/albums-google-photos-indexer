@@ -5,7 +5,8 @@
   "scripts": {
     "indexer": "time node indexer-cli.mjs --config server-config.json",
     "test:programmatic": "node ./test/programmatic-test.mjs",
-    "pack": "npm pack"
+    "pack": "npm pack",
+    "ship": "npm run pack && npm publish --access public"
   },
   "main": "indexer-cli.mjs",
   "files": [
@@ -48,8 +49,6 @@
     "sharp": "^0.35.3"
   },
   "devDependencies": {
-    "bun": "^1.3.14",
-    "@eslint/js": "^10.0.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/git": "^10.0.1",
@@ -57,20 +56,8 @@
     "@semantic-release/npm": "^12.0.2",
     "@semantic-release/release-notes-generator": "^14.1.1",
     "@types/node": "^26.1.2",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.0.5",
-    "concurrently": "^10.0.4",
     "conventional-changelog-conventionalcommits": "^9.3.1",
-    "esbuild": "^0.28.1",
-    "eslint": "^10.8.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.8.0",
-    "knip": "^6.30.0",
-    "rollup-plugin-visualizer": "latest",
-    "semantic-release": "^24.2.9",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.66.0"
+    "semantic-release": "^24.2.9"
   }
 }
