@@ -1,31 +1,49 @@
 {
   "name": "albums-google-photos-indexer",
-  "private": true,
   "version": "0.0.1",
   "type": "module",
   "scripts": {
     "indexer": "time node indexer-cli.mjs --config server-config.json",
-    "test:programmatic": "node ./test/programmatic-test.mjs"
+    "test:programmatic": "node ./test/programmatic-test.mjs",
+    "pack": "npm pack"
   },
   "main": "indexer-cli.mjs",
   "files": [
     "indexer-cli.mjs",
-    "src/"
+    "src/",
+    "README.md",
+    "LICENSE",
+    "examples/"
   ],
   "bin": {
     "indexer": "indexer-cli.mjs"
   },
   "exports": {
     ".": {
-      "import": "./indexer-cli.mjs",
-      "require": "./indexer-cli.mjs"
+      "import": "./indexer-cli.mjs"
     },
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
+  "license": "MIT",
+  "author": "Travel Albums",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/travel-albums-ai/albums-google-photos-indexer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/travel-albums-ai/albums-google-photos-indexer/issues"
+  },
+  "homepage": "https://github.com/travel-albums-ai/albums-google-photos-indexer#readme",
+  "keywords": ["photos","indexer","takeout","thumbnails","ndjson"],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "driver.js": "^1.8.0",
-    "exifr": "^7.1.3",
     "p-limit": "^7.3.1",
     "sharp": "^0.35.3"
   },
