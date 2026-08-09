@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "indexer": "time node indexer-cli.mjs --config server-config.json"
+    "indexer": "time node indexer-cli.mjs --config server-config.json",
+    "test:programmatic": "node ./test/programmatic-test.mjs"
   },
   "main": "indexer-cli.mjs",
   "files": [
