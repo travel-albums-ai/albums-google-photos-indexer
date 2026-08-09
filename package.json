@@ -1,6 +1,6 @@
 {
   "name": "albums-google-photos-indexer",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "indexer": "time node indexer-cli.mjs --config server-config.json",
