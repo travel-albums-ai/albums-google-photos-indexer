@@ -1,6 +1,6 @@
 {
   "name": "albums-google-photos-indexer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "scripts": {
     "indexer": "time node indexer-cli.mjs --config server-config.json",
@@ -58,6 +58,9 @@
     "p-limit": "^7.3.1",
     "sharp": "^0.35.3"
   },
+  "bundledDependencies": [
+    "sharp"
+  ],
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
