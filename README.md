@@ -1,4 +1,208 @@
-# albums-google-photos-indexer 📸🔎
+# Albums Google Photos Indexer
+
+A Node.js CLI, library, and local REST server for indexing Google Photos
+Takeout folders. It scans one or more local roots, writes metadata as NDJSON,
+and creates thumbnails for browsing and offline analysis.
+
+## Architecture
+
+```mermaid
+graph LR
+    CONFIG[server-config.json]
+    CLI[indexer-cli.mjs]
+    SERVER[server.mjs]
+
+    subgraph INDEXER[src/indexer]
+        ORCH[indexer.mjs]
+        WALK[io/walk-stream.mjs]
+        QUEUE[concurrency/queue.mjs]
+        WORKER[concurrency/worker.mjs]
+        THUMB[image/thumbnails.mjs]
+        OUTPUT[io/init-output-dir.mjs]
+        PROGRESS[progress/*]
+        TRANSFORM[transform/ndjson-to-json-map.mjs]
+        CITIES[data/cities.json]
+    end
+
+    CONFIG --> CLI
+    CONFIG --> SERVER
+    CLI --> ORCH
+    SERVER --> CLI
+    ORCH --> WALK
+    WALK --> QUEUE
+    QUEUE --> WORKER
+    WORKER --> THUMB
+    WORKER --> TRANSFORM
+    ORCH --> OUTPUT
+    ORCH --> PROGRESS
+    ORCH --> CITIES
+```
+
+The server and CLI run the indexer in the same Node.js process. The scanner
+walks local files, workers process image records, and the output stream appends
+one JSON record per line to `metadata.json`.
+
+## Requirements
+
+- Node.js 18 or newer
+- A local Google Photos Takeout directory, or another local directory tree
+  containing supported image files
+
+Install dependencies from the repository:
+
+```bash
+npm install
+```
+
+The package is ESM-only. It bundles `sharp` for image processing and exposes a
+CLI binary named `indexer` when installed as a dependency.
+
+## Configuration
+
+Create a JSON configuration file with one or more input roots and an output
+directory:
+
+```json
+{
+  "TAKEOUT_ROOTS": ["/path/to/Takeout"],
+  "TARGET_ROOT": "/path/to/index-cache"
+}
+```
+
+`TAKEOUT_ROOTS` is an array and may contain multiple local roots. The older
+single-value `TAKEOUT_ROOT` key is still accepted for compatibility. Paths may
+be absolute or relative to the process working directory. See the runnable
+example in [examples/server-config.json](examples/server-config.json), and
+[server-config-win.json](server-config-win.json) for Windows paths.
+
+The indexer currently supports local filesystem input only. Cloud storage and
+credential-based adapters are not implemented.
+
+## CLI
+
+Run the indexer with the repository configuration:
+
+```bash
+npm run indexer
+```
+
+Or select a configuration file explicitly:
+
+```bash
+node indexer-cli.mjs --config ./examples/server-config.json
+```
+
+The indexer resumes from records already present in the output file and stops
+cooperatively when its controller is stopped or the process receives `SIGINT`
+or `SIGTERM`.
+
+## Output
+
+The configured `TARGET_ROOT` contains:
+
+- `metadata.json` - append-only NDJSON metadata. Each line is one JSON record.
+- `thumbnails/` - generated thumbnails arranged by encoded root and relative
+  image path.
+
+`metadata.json` is written incrementally and may be incomplete while indexing
+is running. Use `/status` or wait for the CLI to finish before consuming the
+complete file. There is no separate `progress.json` output file; progress is
+available through the running controller and server status response.
+
+## REST server
+
+Start the server on port 3000 using `server-config.json`:
+
+```bash
+npm start
+```
+
+`npm start` builds `dist/server.mjs` first. To select another port or config:
+
+```bash
+PORT=8080 npm start
+node server.mjs --config ./examples/server-config.json
+```
+
+The server starts idle. Use these routes to control and inspect the indexer:
+
+| Method | Route | Description |
+| --- | --- | --- |
+| `GET` | `/health` | Returns `{ "status": "ok" }`. |
+| `GET` | `/status` | Returns lifecycle status, progress, output path, and errors. |
+| `GET` | `/on` | Starts indexing and returns `202`; repeated calls while running are idempotent. |
+| `GET` | `/off` | Requests a cooperative stop; repeated calls are idempotent. |
+| `GET` | `/metadata` | Serves `TARGET_ROOT/metadata.json` as NDJSON, or `404` until it exists. |
+| `GET` | `/images/<root-index>/<relative-path>` | Serves an original supported image from a configured input root. |
+| `GET` | `/thumbnails/<root-index>/<relative-path>` | Serves its generated thumbnail with immutable caching. |
+
+`<root-index>` is the Base64-encoded absolute input-root path used in the
+metadata records. Image and thumbnail paths are checked against their root.
+
+## Windows distribution
+
+These commands create self-contained Windows folders and matching ZIP archives
+with Node.js, the server, the launchers, and platform-specific `sharp`
+dependencies:
+
+```bash
+npm run dist:arm64
+npm run dist:x64
+# build both architectures
+npm run dist:package
+```
+
+The output is `dist-arm64/` or `dist-x64/`, with `TravelAlbums-arm64.zip` or
+`TravelAlbums-x64.zip` at the repository root. Copy the matching folder to the
+Windows computer, update its `server-config.json`, and run
+`run-arm64.cmd` or `run-x64.cmd`. `launcher.ps1` provides the Windows tray
+launcher and server controls.
+
+To run the PowerShell tray launcher directly:
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File .\launcher.ps1
+```
+
+## Programmatic usage
+
+The default export and named `start` export return an `IndexerController`.
+Await `controller.done` and call `controller.stop()` for cooperative shutdown:
+
+```javascript
+import start from 'albums-google-photos-indexer';
+
+const controller = start({
+  cfg: {
+    TAKEOUT_ROOTS: ['./Takeout'],
+    TARGET_ROOT: './index-cache'
+  }
+});
+
+await controller.done;
+```
+
+The package also exports `stop` and `IndexerController`. See
+[examples/programmatic.mjs](examples/programmatic.mjs) for lifecycle events.
+Source helpers are available through the package's `./src/*` export mapping.
+
+## Development
+
+Build the distributable bundles:
+
+```bash
+npm run build
+```
+
+Run the available checks directly:
+
+```bash
+npm run test:programmatic
+node test/server-test.mjs
+```
+
+List all package scripts with `npm run`. The repository does not currently
+define a lint script.# albums-google-photos-indexer 📸🔎
 
 A small, focused CLI & library for indexing photo albums (local drives) into structured JSON outputs for search, browsing, and offline analysis.
 
