@@ -1,3 +1,9 @@
+## [1.7.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.6.0...v1.7.0) (2026-08-14)
+
+### Features
+
+* enhance server management with status updates and context menu actions ([ed739f5](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/ed739f58f6db7d3c430dbcea2af36734b8e08f85))
+
 ## [1.6.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.5.0...v1.6.0) (2026-08-14)
 
 ### Features
