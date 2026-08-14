@@ -182,6 +182,15 @@ npm run dist:x64
 npm run dist:package
 ```
 
+Each build also creates a downloadable archive at the project root:
+
+- `TravelAlbums-arm64.zip`
+- `TravelAlbums-x64.zip`
+
+The archive contains the complete `dist-arm64/` or `dist-x64/` folder. Extract
+it on the matching Windows computer, update `server-config.json`, and run the
+architecture-specific `.cmd` launcher.
+
 Each command creates a complete folder that can be zipped and copied to a
 Windows computer:
 

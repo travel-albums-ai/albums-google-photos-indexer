@@ -11,12 +11,14 @@ const nodeVersion = '22.14.0';
 const targets = {
   arm64: {
     nodeArchive: `node-v${nodeVersion}-win-arm64`,
+    zipName: 'TravelAlbums-arm64.zip',
     sharp: '@img/sharp-win32-arm64',
     libvips: '@img/sharp-libvips-win32-arm64',
     launcher: 'run-arm64.cmd',
   },
   x64: {
     nodeArchive: `node-v${nodeVersion}-win-x64`,
+    zipName: 'TravelAlbums-x64.zip',
     sharp: '@img/sharp-win32-x64',
     libvips: '@img/sharp-libvips-win32-x64',
     launcher: 'run-x64.cmd',
@@ -29,6 +31,7 @@ if (!targets[architecture]) {
 
 const target = targets[architecture];
 const projectDir = path.resolve(import.meta.dirname, '..');
+const zipPath = path.join(projectDir, target.zipName);
 const archivePath = path.join(os.tmpdir(), `${target.nodeArchive}.zip`);
 const extractDir = path.join(os.tmpdir(), target.nodeArchive);
 const nodeUrl = `https://nodejs.org/dist/v${nodeVersion}/${target.nodeArchive}.zip`;
@@ -64,6 +67,12 @@ execFileSync('npm', [
   `${target.libvips}@1.3.2`,
 ], { cwd: projectDir, stdio: 'inherit' });
 
+await fs.rm(zipPath, { force: true });
+execFileSync('zip', ['-qr', zipPath, path.basename(outputDir)], {
+  cwd: path.dirname(outputDir),
+  stdio: 'inherit',
+});
+
 await fs.rm(archivePath, { force: true });
 await fs.rm(extractDir, { recursive: true, force: true });
-console.log(`Created ${outputDir}`);
+console.log(`Created ${outputDir} and ${zipPath}`);

@@ -144,3 +144,5 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 .test-output/metadata.json
+TravelAlbums-arm64.zip
+TravelAlbums-x64.zip
