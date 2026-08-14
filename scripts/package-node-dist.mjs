@@ -15,6 +15,7 @@ const targets = {
     sharp: '@img/sharp-win32-arm64',
     libvips: '@img/sharp-libvips-win32-arm64',
     launcher: 'run-arm64.cmd',
+    trayLauncher: 'launcher.ps1',
   },
   x64: {
     nodeArchive: `node-v${nodeVersion}-win-x64`,
@@ -22,6 +23,7 @@ const targets = {
     sharp: '@img/sharp-win32-x64',
     libvips: '@img/sharp-libvips-win32-x64',
     launcher: 'run-x64.cmd',
+    trayLauncher: 'launcher.ps1',
   },
 };
 
@@ -52,6 +54,7 @@ await fs.copyFile(path.join(projectDir, 'indexer-cli.mjs'), path.join(outputDir,
 await fs.copyFile(path.join(projectDir, 'server-config.json'), path.join(outputDir, 'server-config.json'));
 await fs.copyFile(path.join(projectDir, 'README.md'), path.join(outputDir, 'README.md'));
 await fs.copyFile(path.join(projectDir, target.launcher), path.join(outputDir, target.launcher));
+await fs.copyFile(path.join(projectDir, target.trayLauncher), path.join(outputDir, target.trayLauncher));
 
 execFileSync('npm', [
   'install',

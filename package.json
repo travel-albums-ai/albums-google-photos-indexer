@@ -23,6 +23,7 @@
     "server.mjs",
     "run-arm64.cmd",
     "run-x64.cmd",
+    "launcher.ps1",
     "dist/",
     "src/",
     "README.md",
