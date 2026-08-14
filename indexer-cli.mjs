@@ -3,7 +3,6 @@
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import sharp from 'sharp';
 
 import EventEmitter from 'node:events';
 import { createSemaphore } from './src/indexer/concurrency/queue.mjs';
@@ -13,6 +12,7 @@ import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
 import { initOutputDir } from './src/indexer/io/init-output-dir.mjs';
 import { loadCitiesFile, loadConfigFromArgv } from './src/indexer/io/load-config.mjs';
 import { loadExisting } from './src/indexer/io/load-existing.mjs';
+import sharp from './src/indexer/io/load-sharp.mjs';
 import { readJsonSafe } from './src/indexer/io/read-json-safe.mjs';
 import { walkStream } from './src/indexer/io/walk-stream.mjs';
 import { createProgress } from './src/indexer/progress/progress.mjs';

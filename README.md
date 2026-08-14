@@ -170,24 +170,35 @@ Available endpoints:
 The output file is written incrementally, so clients should use `/status` to
 determine whether indexing has finished before consuming the complete file.
 
-### Windows executables with Bun
+### Windows distributions with Node.js
 
-The Bun packaging scripts resolve sharp's native Windows dependency before
-compiling each target:
+The distribution scripts package a matching Windows Node.js runtime, the
+server source, and sharp's native Windows dependency tree:
 
 ```bash
-npm run bun:arm64
-npm run bun:win32
+npm run dist:arm64
+npm run dist:x64
 # or build both
-npm run bun:package
+npm run dist:package
 ```
 
-Run `TravelAlbums-arm64.exe` on Windows ARM64 and `TravelAlbums-win32.exe` on
-Windows x64. These builds must use the matching sharp package; the Linux sharp
-binary installed on a Linux build host cannot run inside either Windows
-executable. `bundledDependencies: ["sharp"]` controls npm package contents; it
-does not embed sharp's native `.node` addon into a Bun executable. The Bun
-scripts explicitly embed the target Windows sharp package for this reason.
+Each command creates a complete folder that can be zipped and copied to a
+Windows computer:
+
+- `dist-arm64/` contains `TravelAlbums-arm64.exe` and Windows ARM64 sharp
+	dependencies.
+- `dist-x64/` contains `TravelAlbums-win32.exe` and Windows x64 sharp
+	dependencies.
+
+Run the matching `run-arm64.cmd` or `run-x64.cmd` launcher from the copied
+folder. The launcher changes into its own folder so the sidecar `node_modules`
+directory is found even when started from another working directory. The
+folder also contains `server-config.json`; update its input and output paths
+for the target computer.
+
+Each folder includes `node.exe`, so Node.js does not need to be installed on
+the target computer. The Linux sharp binary installed on the build host is not
+copied; each folder contains the matching Windows native sharp package.
 
 4. CLI style (node)
 
