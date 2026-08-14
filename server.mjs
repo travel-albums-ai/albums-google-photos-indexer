@@ -9,7 +9,7 @@ import startIndexer from './indexer-cli.mjs';
 import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
 import { loadConfigFromArgv } from './src/indexer/io/load-config.mjs';
 
-const DEFAULT_PORT = 3000;
+const DEFAULT_PORT = 3001;
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.tif', '.tiff', '.heic', '.heif']);
 
 function outputFileFor(config) {
@@ -34,6 +34,31 @@ function isWithinRoot(filePath, root) {
 
 export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
   const app = express();
+  const allowedOrigins = new Set([
+    'https://web-app-travel-albums.vercel.app',
+    'http://web-app-travel-albums.vercel.app',
+    'http://localhost:5173',
+  ]);
+
+  app.use((req, res, next) => {
+    const origin = req.get('Origin');
+
+    if (allowedOrigins.has(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+      res.setHeader('Access-Control-Allow-Credentials', 'false');
+    }
+
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(204);
+      return;
+    }
+
+    next();
+  });
+
   const targetRoot = cfg?.TARGET_ROOT ? path.resolve(cfg.TARGET_ROOT) : null;
   const takeoutRoots = takeoutRootsFor(cfg);
   const state = {
@@ -136,7 +161,7 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     res.json({ ...getStatus(), stopped: true });
   });
 
-  app.get('/metadata', async (_req, res, next) => {
+  app.get('/takeout-metadata', async (_req, res, next) => {
     const outputFile = state.controller?.outFile ?? outputFileFor(state.cfg);
     if (!outputFile) {
       res.status(503).json({ error: 'TARGET_ROOT is not configured' });
