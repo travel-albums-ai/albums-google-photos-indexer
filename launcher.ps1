@@ -95,13 +95,12 @@ $statusItem.Image = $redIcon
 $menu.Items.Add("-")
 
 # Application
-$openApp = $menu.Items.Add("Open Server")
-$openApp.Image = $appIcon.ToBitmap()
+$openApp = $menu.Items.Add("Check Server")
 
-$github = $menu.Items.Add("Open GitHub")
+$github = $menu.Items.Add("GitHub Project")
 $github.Image = $appIcon.ToBitmap()
 
-$deployed = $menu.Items.Add("Open Deployed App")
+$deployed = $menu.Items.Add("Travel Albums")
 $deployed.Image = $appIcon.ToBitmap()
 
 $menu.Items.Add("-")
@@ -116,7 +115,6 @@ $stop.Image = $appIcon.ToBitmap()
 $menu.Items.Add("-")
 
 $exit = $menu.Items.Add("Exit")
-$exit.Image = $appIcon.ToBitmap()
 
 $notify.ContextMenuStrip = $menu
 

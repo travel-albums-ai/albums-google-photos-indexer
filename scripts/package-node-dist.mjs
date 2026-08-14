@@ -51,7 +51,7 @@ await fs.copyFile(path.join(extractDir, 'node.exe'), path.join(outputDir, 'node.
 await fs.cp(path.join(projectDir, 'src'), path.join(outputDir, 'src'), { recursive: true });
 await fs.copyFile(path.join(projectDir, 'server.mjs'), path.join(outputDir, 'server.mjs'));
 await fs.copyFile(path.join(projectDir, 'indexer-cli.mjs'), path.join(outputDir, 'indexer-cli.mjs'));
-await fs.copyFile(path.join(projectDir, 'server-config.json'), path.join(outputDir, 'server-config.json'));
+await fs.copyFile(path.join(projectDir, 'server-config-win.json'), path.join(outputDir, 'server-config.json'));
 await fs.copyFile(path.join(projectDir, 'README.md'), path.join(outputDir, 'README.md'));
 await fs.copyFile(path.join(projectDir, target.launcher), path.join(outputDir, target.launcher));
 await fs.copyFile(path.join(projectDir, target.trayLauncher), path.join(outputDir, target.trayLauncher));
