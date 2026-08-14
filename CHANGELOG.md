@@ -1,3 +1,9 @@
+## [1.11.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.10.0...v1.11.0) (2026-08-14)
+
+### Features
+
+* add Windows start script for server configuration ([17a028d](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/17a028dd8050fac0ff3c4ad5dc43dd7758da25bc))
+
 ## [1.10.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.9.0...v1.10.0) (2026-08-14)
 
 ### Features
