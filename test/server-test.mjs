@@ -7,6 +7,8 @@ import path from 'node:path';
 import { createServer } from '../server.mjs';
 
 const targetRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'albums-indexer-server-'));
+const takeoutRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'albums-indexer-takeout-'));
+const rootIndex = Buffer.from(path.resolve(takeoutRoot)).toString('base64');
 const controllers = [];
 
 function createFakeIndexer() {
@@ -26,7 +28,7 @@ function createFakeIndexer() {
 }
 
 const { app } = createServer({
-  cfg: { TARGET_ROOT: targetRoot },
+  cfg: { TARGET_ROOT: targetRoot, TAKEOUT_ROOTS: [takeoutRoot] },
   indexerStart: createFakeIndexer,
 });
 const server = app.listen(0);
@@ -44,8 +46,26 @@ try {
   assert.equal(result.response.status, 200);
   assert.equal(result.body.status, 'idle');
 
-  result = await request('/file');
+  result = await request('/metadata');
   assert.equal(result.response.status, 404);
+
+  await fsp.mkdir(path.join(takeoutRoot, 'album'), { recursive: true });
+  await fsp.mkdir(path.join(targetRoot, 'thumbnails', rootIndex, 'album'), { recursive: true });
+  await fsp.writeFile(path.join(takeoutRoot, 'album', 'photo.jpg'), 'original');
+  await fsp.writeFile(path.join(targetRoot, 'thumbnails', rootIndex, 'album', 'photo.jpg'), 'thumbnail');
+
+  let imageResponse = await fetch(`${baseUrl}/images/${rootIndex}/album/photo.jpg`);
+  assert.equal(imageResponse.status, 200);
+  assert.equal(await imageResponse.text(), 'original');
+  assert.equal(imageResponse.headers.get('cache-control'), 'public, max-age=36000, immutable');
+
+  imageResponse = await fetch(`${baseUrl}/thumbnails/${rootIndex}/album/photo.jpg`);
+  assert.equal(imageResponse.status, 200);
+  assert.equal(await imageResponse.text(), 'thumbnail');
+  assert.equal(imageResponse.headers.get('cache-control'), 'public, max-age=31536000, immutable');
+
+  imageResponse = await fetch(`${baseUrl}/images/${rootIndex}/../outside.jpg`);
+  assert.equal(imageResponse.status, 400);
 
   result = await request('/on', { method: 'POST' });
   assert.equal(result.response.status, 202);
@@ -66,7 +86,7 @@ try {
   assert.equal(result.body.status, 'stopped');
 
   await fsp.writeFile(path.join(targetRoot, 'metadata.json'), '{"ready":true}\n');
-  const fileResponse = await fetch(`${baseUrl}/file`);
+  const fileResponse = await fetch(`${baseUrl}/metadata`);
   assert.equal(fileResponse.status, 200);
   assert.equal(await fileResponse.text(), '{"ready":true}\n');
 
@@ -80,6 +100,7 @@ try {
   }
   server.close();
   await fsp.rm(targetRoot, { recursive: true, force: true });
+  await fsp.rm(takeoutRoot, { recursive: true, force: true });
 }
 
 console.log('Server test passed');

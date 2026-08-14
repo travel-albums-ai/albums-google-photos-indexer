@@ -6,10 +6,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import startIndexer from './indexer-cli.mjs';
-import { OUT_FILE } from './src/indexer/indexer.mjs';
+import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
 import { loadConfigFromArgv } from './src/indexer/io/load-config.mjs';
 
 const DEFAULT_PORT = 3000;
+const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.tif', '.tiff', '.heic', '.heif']);
 
 function outputFileFor(config) {
   return config?.TARGET_ROOT
@@ -17,8 +18,24 @@ function outputFileFor(config) {
     : null;
 }
 
+function takeoutRootsFor(config) {
+  const roots = Array.isArray(config?.TAKEOUT_ROOTS)
+    ? config.TAKEOUT_ROOTS
+    : config?.TAKEOUT_ROOT
+      ? [config.TAKEOUT_ROOT]
+      : [];
+
+  return roots.map(root => path.resolve(root));
+}
+
+function isWithinRoot(filePath, root) {
+  return filePath === root || filePath.startsWith(`${root}${path.sep}`);
+}
+
 export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
   const app = express();
+  const targetRoot = cfg?.TARGET_ROOT ? path.resolve(cfg.TARGET_ROOT) : null;
+  const takeoutRoots = takeoutRootsFor(cfg);
   const state = {
     cfg,
     controller: null,
@@ -37,6 +54,46 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
       error: state.error ? state.error.message : null,
     };
   };
+
+  if (targetRoot) {
+    app.use('/thumbnails', express.static(path.join(targetRoot, CACHE_FOLDER), {
+      immutable: true,
+      maxAge: '365d',
+      index: false,
+      redirect: false,
+      fallthrough: false,
+      setHeaders(response) {
+        response.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      },
+    }));
+  }
+
+  app.get(/^\/images\/([^/]+)\/(.+)$/, (req, res) => {
+    const rootIndex = req.params[0];
+    const relativePath = req.params[1];
+    const root = takeoutRoots.find(candidate => Buffer.from(candidate).toString('base64') === rootIndex);
+
+    if (!root || !relativePath) {
+      res.status(400).json({ error: 'Invalid path' });
+      return;
+    }
+
+    const absolutePath = path.resolve(root, relativePath);
+    if (!isWithinRoot(absolutePath, root)) {
+      res.status(400).json({ error: 'Invalid path' });
+      return;
+    }
+
+    if (!IMAGE_EXTENSIONS.has(path.extname(absolutePath).toLowerCase())) {
+      res.status(400).json({ error: 'Not an image file' });
+      return;
+    }
+
+    res.set('Cache-Control', 'public, max-age=36000, immutable');
+    res.sendFile(absolutePath, error => {
+      if (error && !res.headersSent) res.status(404).json({ error: 'Image not found' });
+    });
+  });
 
   app.get('/status', (_req, res) => {
     res.json(getStatus());

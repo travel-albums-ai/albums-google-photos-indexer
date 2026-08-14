@@ -164,8 +164,13 @@ Available endpoints:
 	already running is idempotent.
 - `POST /off` requests a cooperative stop. Calling it when indexing is not
 	running is also idempotent.
-- `GET /file` returns the configured `TARGET_ROOT/metadata.json`. It returns
+- `GET /metadata` returns the configured `TARGET_ROOT/metadata.json`. It returns
 	`404` until the output file exists.
+- `GET /images/<root-index>/<relative-path>` returns an original image from a
+	configured takeout root. `<root-index>` is the base64-encoded absolute root
+	path used in the generated metadata.
+- `GET /thumbnails/<root-index>/<relative-path>` returns its generated thumbnail
+	from `TARGET_ROOT/thumbnails` with long-lived immutable caching.
 
 The output file is written incrementally, so clients should use `/status` to
 determine whether indexing has finished before consuming the complete file.
