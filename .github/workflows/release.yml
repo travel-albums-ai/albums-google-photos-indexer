@@ -41,6 +41,9 @@ jobs:
       - name: "🧰 Build"
         run: npm run build
 
+      - name: "🪟 Build Windows distributions"
+        run: npm run dist:package
+
       - name: "🏷️ Create release (npm run next)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
