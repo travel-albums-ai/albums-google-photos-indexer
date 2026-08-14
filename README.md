@@ -135,14 +135,49 @@ npm install
 npm run indexer
 ```
 
-3. CLI style (node)
+3. Run the REST server
+
+```bash
+# starts Express on port 3000 and remains idle until POST /on
+npm start
+
+# use a different port
+PORT=8080 npm start
+
+# use a different config
+node server.mjs --config ./examples/server-config.json
+```
+
+The server controls the indexer in the same Node.js process. It does not spawn a
+separate indexer process. Configuration is loaded from the file passed with
+`--config`, and the server listens on `PORT` or port `3000` by default.
+
+`npm start` builds `dist/server.mjs` before launching it. The server bundle
+contains Express, the indexer, and sharp's JavaScript layer in one artifact.
+Sharp's current-platform native packages remain bundled with the npm package so
+the native image processing bindings are available at runtime.
+
+Available endpoints:
+
+- `GET /status` returns the current lifecycle state and progress.
+- `POST /on` starts indexing and returns `202`. Calling it while indexing is
+	already running is idempotent.
+- `POST /off` requests a cooperative stop. Calling it when indexing is not
+	running is also idempotent.
+- `GET /file` returns the configured `TARGET_ROOT/metadata.json`. It returns
+	`404` until the output file exists.
+
+The output file is written incrementally, so clients should use `/status` to
+determine whether indexing has finished before consuming the complete file.
+
+4. CLI style (node)
 
 ```bash
 # use the example config shipped with the repo
 node indexer-cli.mjs --config ./examples/server-config.json
 ```
 
-4. Install as a dependency in another project
+5. Install as a dependency in another project
 
 - From the npm registry (when published):
 
@@ -164,7 +199,7 @@ npm install ../albums-google-photos-indexer
 npm link ../albums-google-photos-indexer
 ```
 
-5. Run the CLI from another project
+6. Run the CLI from another project
 
 - Using `npx` (runs the published `indexer` binary or the package from the registry):
 

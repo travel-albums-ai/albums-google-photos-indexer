@@ -52,6 +52,9 @@ export class IndexerController {
     this.emitter = new EventEmitter();
     this.status = 'idle';
     this.done = null;
+    this.progress = null;
+    this.outFile = null;
+    this.error = null;
   }
 
   on(ev, fn) { this.emitter.on(ev, fn); }
@@ -78,7 +81,7 @@ export class IndexerController {
 
       if (!TAKEOUT_ROOTS.length) {
         console.error('No TAKEOUT_ROOTS or TAKEOUT_ROOT configured. Provide at least one root to scan.');
-        process.exit(1);
+        throw new Error('No TAKEOUT_ROOTS or TAKEOUT_ROOT configured');
       }
 
       const resolvedRoots = TAKEOUT_ROOTS.map(r => path.resolve(r));
@@ -93,9 +96,11 @@ export class IndexerController {
       console.log(`===============================`);
 
       const { stream, emit, flush, outFile } = await initOutputDir(OUT_DIR);
+      this.outFile = outFile;
 
       const existingSet = await loadExisting(outFile);
       const progress = createProgress(Date.now());
+      this.progress = progress;
       progress.setPreindexed(existingSet.size);
       console.log(`[discovery] Found ${Array.from(existingSet).length} existing records. Resuming...`);
       console.log(`===============================`);
@@ -137,7 +142,12 @@ export class IndexerController {
         }
         _CURRENT_CONTROLLER = null;
       }
-    })();
+    })().catch(err => {
+      this.status = 'error';
+      this.error = err;
+      if (this.emitter.listenerCount('error')) this.emitter.emit('error', err);
+      throw err;
+    });
 
     return this;
   }
@@ -155,7 +165,7 @@ export function stop() {
 
 export default start;
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (process.argv[1] === fileURLToPath(import.meta.url) && !globalThis.__INDEXER_IMPORTED_IN_SERVER__) {
   (async () => {
     try {
       _CURRENT_DONE = start();

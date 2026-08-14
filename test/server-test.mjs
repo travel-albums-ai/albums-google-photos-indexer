@@ -1,0 +1,85 @@
+import assert from 'node:assert/strict';
+import { once } from 'node:events';
+import fsp from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+
+import { createServer } from '../server.mjs';
+
+const targetRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'albums-indexer-server-'));
+const controllers = [];
+
+function createFakeIndexer() {
+  let resolveDone;
+  const controller = {
+    status: 'running',
+    progress: { getState: () => ({ totalFound: 1, totalFiles: 1, done: 0, preindexed: 0, failed: 0 }) },
+    outFile: path.join(targetRoot, 'metadata.json'),
+    done: new Promise(resolve => { resolveDone = resolve; }),
+    stop() {
+      this.status = 'stopped';
+      resolveDone();
+    },
+  };
+  controllers.push(controller);
+  return controller;
+}
+
+const { app } = createServer({
+  cfg: { TARGET_ROOT: targetRoot },
+  indexerStart: createFakeIndexer,
+});
+const server = app.listen(0);
+await once(server, 'listening');
+const address = server.address();
+const baseUrl = `http://127.0.0.1:${address.port}`;
+
+async function request(route, options) {
+  const response = await fetch(`${baseUrl}${route}`, options);
+  return { response, body: await response.json() };
+}
+
+try {
+  let result = await request('/status');
+  assert.equal(result.response.status, 200);
+  assert.equal(result.body.status, 'idle');
+
+  result = await request('/file');
+  assert.equal(result.response.status, 404);
+
+  result = await request('/on', { method: 'POST' });
+  assert.equal(result.response.status, 202);
+  assert.equal(result.body.started, true);
+  assert.equal(controllers.length, 1);
+
+  result = await request('/on', { method: 'POST' });
+  assert.equal(result.response.status, 200);
+  assert.equal(result.body.started, false);
+  assert.equal(controllers.length, 1);
+
+  result = await request('/off', { method: 'POST' });
+  assert.equal(result.response.status, 200);
+  assert.equal(result.body.status, 'stopped');
+
+  result = await request('/off', { method: 'POST' });
+  assert.equal(result.response.status, 200);
+  assert.equal(result.body.status, 'stopped');
+
+  await fsp.writeFile(path.join(targetRoot, 'metadata.json'), '{"ready":true}\n');
+  const fileResponse = await fetch(`${baseUrl}/file`);
+  assert.equal(fileResponse.status, 200);
+  assert.equal(await fileResponse.text(), '{"ready":true}\n');
+
+  result = await request('/on', { method: 'POST' });
+  assert.equal(result.response.status, 202);
+  assert.equal(result.body.started, true);
+  assert.equal(controllers.length, 2);
+} finally {
+  for (const controller of controllers) {
+    if (controller.status === 'running') controller.stop();
+  }
+  server.close();
+  await fsp.rm(targetRoot, { recursive: true, force: true });
+}
+
+console.log('Server test passed');

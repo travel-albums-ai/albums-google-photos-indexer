@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "prestart": "npm run build",
+    "start": "node dist/server.mjs --config server-config.json",
     "indexer": "time node indexer-cli.mjs --config server-config.json",
     "test:programmatic": "node ./test/programmatic-test.mjs",
-    "build": "esbuild indexer-cli.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/indexer-cli.mjs --minify --sourcemap --external:sharp && mkdir -p dist/src/indexer/data && cp -r src/indexer/data/* dist/src/indexer/data/",
+    "build": "esbuild server.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/server.mjs --minify --sourcemap --external:@img/* --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url); globalThis.__INDEXER_IMPORTED_IN_SERVER__ = true;\" && esbuild indexer-cli.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/indexer-cli.mjs --minify --sourcemap --external:sharp && mkdir -p dist/src/indexer/data && cp -r src/indexer/data/* dist/src/indexer/data/",
     "pack": "npm pack",
     "prepack": "npm run build",
     "prepublishOnly": "npm run build",
@@ -15,6 +17,7 @@
   "main": "dist/indexer-cli.mjs",
   "files": [
     "indexer-cli.mjs",
+    "server.mjs",
     "dist/",
     "src/",
     "README.md",
@@ -56,6 +59,7 @@
   },
   "dependencies": {
     "driver.js": "^1.8.0",
+    "express": "^5.1.0",
     "p-limit": "^7.3.1",
     "sharp": "^0.35.3"
   },
