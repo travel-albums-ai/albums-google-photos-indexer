@@ -122,7 +122,7 @@ Note: This edition focuses on local filesystem indexing. The IO layer is pluggab
 
 **Install & Run**
 
-1. Install dependencies
+1. Install dependencies for development
 
 ```bash
 npm install
@@ -132,7 +132,7 @@ npm install
 
 ```bash
 # uses server-config.json by default
-npm run indexer:hdd
+npm run indexer
 ```
 
 3. CLI style (node)
@@ -140,6 +140,53 @@ npm run indexer:hdd
 ```bash
 # use the example config shipped with the repo
 node indexer-cli.mjs --config ./examples/server-config.json
+```
+
+4. Install as a dependency in another project
+
+- From the npm registry (when published):
+
+```bash
+npm install albums-google-photos-indexer
+```
+
+- Directly from this GitHub repository:
+
+```bash
+npm install github:travel-albums-ai/albums-google-photos-indexer
+```
+
+- For local development / testing from a sibling folder:
+
+```bash
+npm install ../albums-google-photos-indexer
+# or
+npm link ../albums-google-photos-indexer
+```
+
+5. Run the CLI from another project
+
+- Using `npx` (runs the published `indexer` binary or the package from the registry):
+
+```bash
+npx indexer --config ./node_modules/albums-google-photos-indexer/examples/server-config.json
+```
+
+- Spawn the binary programmatically from a script:
+
+```javascript
+import { spawn } from 'node:child_process';
+const p = spawn('npx', ['indexer', '--config', './node_modules/albums-google-photos-indexer/examples/server-config.json'], { stdio: 'inherit' });
+await new Promise((r, j) => p.on('close', r));
+```
+
+6. Install via tarball (pack + install)
+
+```bash
+# from this package folder
+npm pack
+# then in the other project
+npm install ../albums-google-photos-indexer/albums-google-photos-indexer-0.0.3.tgz
 ```
 
 **Outputs produced**
@@ -160,7 +207,9 @@ node indexer-cli.mjs --config ./examples/server-config.json
 
 **Programmatic usage**
 
-You can import and control the indexer from other Node modules. `start()` returns an object with a `done` promise and a `stop()` function:
+You can import and control the indexer from other Node modules. The package exports a default `start()` helper, named `start` and `stop` exports, and an `IndexerController` class. `start()` returns a controller whose `done` property is a promise and which exposes a `stop()` method.
+
+Quick example (from another project):
 
 ```javascript
 import start, { stop as stopGlobal } from 'albums-google-photos-indexer';
@@ -176,6 +225,20 @@ setTimeout(() => stopGlobal(), 200);
 
 await controller.done; // resolves when indexing finishes or is stopped
 ```
+
+Importing specific internal modules
+
+If you need to import lower-level helpers from the repository (for example to reuse `walkStream` or `initOutputDir`), the package exports the source files under the `./src/*` export mapping:
+
+```javascript
+import { walkStream } from 'albums-google-photos-indexer/src/indexer/io/walk-stream.mjs';
+```
+
+Notes
+
+- This package is ESM-only (`"type": "module"` in `package.json`), and requires Node.js >= 18.
+- When using the installed package, you can run the bundled CLI binary via `npx indexer` (the package provides a `bin` entry).
+- See the example programmatic runner in [examples/programmatic.mjs](examples/programmatic.mjs) for a runnable demo.
 
 **Developer notes / extensibility**
 
