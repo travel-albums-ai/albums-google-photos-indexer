@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.0.0...v1.1.0) (2026-08-14)
+
+### Features
+
+* add server functionality with express and indexer control endpoints ([643aedc](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/643aedcc9771c8dec8ab9e36d2db4f4cd8074dac))
+
 ## 1.0.0 (2026-08-09)
 
 ### Features
