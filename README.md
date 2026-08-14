@@ -170,6 +170,25 @@ Available endpoints:
 The output file is written incrementally, so clients should use `/status` to
 determine whether indexing has finished before consuming the complete file.
 
+### Windows executables with Bun
+
+The Bun packaging scripts resolve sharp's native Windows dependency before
+compiling each target:
+
+```bash
+npm run bun:arm64
+npm run bun:win32
+# or build both
+npm run bun:package
+```
+
+Run `TravelAlbums-arm64.exe` on Windows ARM64 and `TravelAlbums-win32.exe` on
+Windows x64. These builds must use the matching sharp package; the Linux sharp
+binary installed on a Linux build host cannot run inside either Windows
+executable. `bundledDependencies: ["sharp"]` controls npm package contents; it
+does not embed sharp's native `.node` addon into a Bun executable. The Bun
+scripts explicitly embed the target Windows sharp package for this reason.
+
 4. CLI style (node)
 
 ```bash
