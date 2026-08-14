@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import express from 'express';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,6 +42,10 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     res.json(getStatus());
   });
 
+  app.get('/health', (_req, res) => {
+    res.json({ status: 'ok' });
+  });
+
   app.get('/on', (_req, res) => {
     if (state.controller?.status === 'running') {
       res.json({ ...getStatus(), started: false });
@@ -74,21 +79,24 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     res.json({ ...getStatus(), stopped: true });
   });
 
-  app.get('/file', (req, res, next) => {
+  app.get('/metadata', async (_req, res, next) => {
     const outputFile = state.controller?.outFile ?? outputFileFor(state.cfg);
     if (!outputFile) {
       res.status(503).json({ error: 'TARGET_ROOT is not configured' });
       return;
     }
 
-    res.sendFile(outputFile, error => {
-      if (!error) return;
+    try {
+      const raw = await readFile(outputFile, 'utf8');
+      res.type('application/x-ndjson');
+      res.send(raw);
+    } catch (error) {
       if (error.code === 'ENOENT') {
         res.status(404).json({ error: 'Generated file is not available' });
         return;
       }
       next(error);
-    });
+    }
   });
 
   return { app, state, getStatus };
