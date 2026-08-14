@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.2.0...v1.3.0) (2026-08-14)
+
+### Features
+
+* update packaging for Windows distributions and add launcher scripts ([b23f647](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/b23f6476dc60f444c37ffe099602dd41ff903eb5))
+
 ## [1.2.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.1.0...v1.2.0) (2026-08-14)
 
 ### Features
