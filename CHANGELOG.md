@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.3.0...v1.4.0) (2026-08-14)
+
+### Features
+
+* add zip archive creation for Windows builds and update README ([d4d478c](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/d4d478c28eda67aeb9c8f0b8d7e8983623ffbe38))
+
 ## [1.3.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.2.0...v1.3.0) (2026-08-14)
 
 ### Features
