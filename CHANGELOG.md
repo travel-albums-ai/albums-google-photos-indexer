@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.5.0...v1.6.0) (2026-08-14)
+
+### Features
+
+* add PowerShell launcher script for server management ([bf06b99](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/bf06b99bf1545f3f9cd4dd00f71ca17565f3bdb3))
+
 ## [1.5.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.4.0...v1.5.0) (2026-08-14)
 
 ### Features
