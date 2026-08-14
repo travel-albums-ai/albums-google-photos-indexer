@@ -1,3 +1,9 @@
+## [1.9.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.8.0...v1.9.0) (2026-08-14)
+
+### Features
+
+* add health check endpoint and improve metadata file handling ([a29686d](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/a29686d6e9d7750c28af1c85df2d193ea99d9890))
+
 ## [1.8.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.7.0...v1.8.0) (2026-08-14)
 
 ### Features
