@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.4.0...v1.5.0) (2026-08-14)
+
+### Features
+
+* add Windows distribution build step and update release assets ([c3008f0](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/c3008f0ffad69e8b72e247890773308562291f54))
+
 ## [1.4.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.3.0...v1.4.0) (2026-08-14)
 
 ### Features
