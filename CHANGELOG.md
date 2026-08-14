@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.1.0...v1.2.0) (2026-08-14)
+
+### Features
+
+* add Bun support for Windows executables and update package scripts ([fc42a59](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/fc42a59d315c96dea9c2c8197350a338b393e4bc))
+
 ## [1.1.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.0.0...v1.1.0) (2026-08-14)
 
 ### Features
