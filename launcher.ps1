@@ -27,39 +27,6 @@ function Start-Server {
         -PassThru
 }
 
-function Stop-Server {
-    # Tell the server to shut itself down cleanly.
-    # This is ONLY called explicitly by the user or on Exit.
-    try {
-        Invoke-RestMethod `
-            -Uri "$baseUrl/off" `
-            -Method Get `
-            -TimeoutSec 5 `
-            -ErrorAction Stop | Out-Null
-    } catch {
-        # Server may already be stopped.
-    }
-
-    if (Test-ServerProcess) {
-        Stop-Process $script:node.Id -Force
-    }
-
-    $script:node = $null
-}
-
-function Invoke-Server {
-    # Explicit user action, therefore HTTP is allowed here.
-    try {
-        Invoke-RestMethod `
-            -Uri "$baseUrl/on" `
-            -Method Get `
-            -TimeoutSec 5 `
-            -ErrorAction Stop | Out-Null
-    } catch {
-        # Server may not be ready yet.
-    }
-}
-
 # ------------------------------------------------------------
 # Windows Forms
 # ------------------------------------------------------------
@@ -128,7 +95,7 @@ $statusItem.Image = $redIcon
 $menu.Items.Add("-")
 
 # Application
-$openApp = $menu.Items.Add("Open Application")
+$openApp = $menu.Items.Add("Open Server")
 $openApp.Image = $appIcon.ToBitmap()
 
 $github = $menu.Items.Add("Open GitHub")
@@ -143,16 +110,13 @@ $menu.Items.Add("-")
 $start = $menu.Items.Add("Start Server")
 $start.Image = $appIcon.ToBitmap()
 
-$invoke = $menu.Items.Add("Invoke Server")
-$invoke.Image = $appIcon.ToBitmap()
-
 $stop = $menu.Items.Add("Stop Server")
 $stop.Image = $appIcon.ToBitmap()
 
 $menu.Items.Add("-")
 
-# Exit
 $exit = $menu.Items.Add("Exit")
+$exit.Image = $appIcon.ToBitmap()
 
 $notify.ContextMenuStrip = $menu
 
@@ -178,11 +142,7 @@ function Update-Status {
 # ------------------------------------------------------------
 
 $openApp.Add_Click({
-    # IMPORTANT:
-    # No /status call here.
-    # Just open the application. The browser will deal with
-    # the server being unavailable if it isn't running.
-    Start-Process $baseUrl
+    Start-Process "$baseUrl/status"
 })
 
 $github.Add_Click({
@@ -195,45 +155,28 @@ $deployed.Add_Click({
 
 $start.Add_Click({
     Start-Server
-    Update-Status
-})
-
-$invoke.Add_Click({
-    Invoke-Server
-    Update-Status
+    Start-Process "$baseUrl/on"
 })
 
 $stop.Add_Click({
-    Stop-Server
-    Update-Status
+    Start-Process "$baseUrl/off"
 })
 
 $exit.Add_Click({
-    Stop-Server
-
-    $timer.Stop()
-    $timer.Dispose()
-
-    $notify.Visible = $false
-    $notify.Dispose()
-
-    $greenIcon.Dispose()
-    $redIcon.Dispose()
-
     [System.Windows.Forms.Application]::Exit()
 })
 
-# Double-click tray icon opens application.
+
+# Double-click tray icon opens status page.
 $notify.Add_DoubleClick({
-    Start-Process $baseUrl
+    Start-Process "$baseUrl/status"
 })
 
 # ------------------------------------------------------------
 # Live status timer
 #
-# IMPORTANT:
-# This checks ONLY the node.exe process.
-# It does NOT make HTTP requests.
+# ONLY checks the local node.exe process.
+# No HTTP requests are made here.
 # ------------------------------------------------------------
 
 $timer = New-Object System.Windows.Forms.Timer
@@ -246,9 +189,7 @@ $timer.Add_Tick({
 $timer.Start()
 
 # ------------------------------------------------------------
-# Start server
-#
-# No HTTP status check happens here.
+# Start server process
 # ------------------------------------------------------------
 
 Start-Server
