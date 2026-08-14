@@ -1,3 +1,9 @@
+## [1.12.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.11.0...v1.12.0) (2026-08-14)
+
+### Features
+
+* update server configuration and add CORS support; rename metadata endpoint ([c95304a](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/c95304a84da191aa2a4f0b15364ac457f11cbd12))
+
 ## [1.11.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.10.0...v1.11.0) (2026-08-14)
 
 ### Features
