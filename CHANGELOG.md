@@ -1,3 +1,9 @@
+## [1.10.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.9.0...v1.10.0) (2026-08-14)
+
+### Features
+
+* add endpoints for retrieving images and thumbnails, and update metadata endpoint ([e876a55](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/e876a5568a34770244370a5584aaca8499ebefb9))
+
 ## [1.9.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.8.0...v1.9.0) (2026-08-14)
 
 ### Features
