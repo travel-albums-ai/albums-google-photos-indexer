@@ -1,3 +1,9 @@
+## [1.8.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.7.0...v1.8.0) (2026-08-14)
+
+### Features
+
+* update context menu items and server configuration for improved clarity ([af784f5](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/af784f59ea184924ff617b99829c20de6108b977))
+
 ## [1.7.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.6.0...v1.7.0) (2026-08-14)
 
 ### Features
