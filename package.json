@@ -5,6 +5,7 @@
   "scripts": {
     "prestart": "npm run build",
     "start": "node dist/server.mjs --config server-config.json",
+    "start:win": "node dist/server.mjs --config server-config-win.json",
     "indexer": "time node indexer-cli.mjs --config server-config.json",
     "test:programmatic": "node ./test/programmatic-test.mjs",
     "build": "esbuild server.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/server.mjs --minify --sourcemap --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url); globalThis.__INDEXER_IMPORTED_IN_SERVER__ = true;\" && esbuild indexer-cli.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/indexer-cli.mjs --minify --sourcemap --external:sharp && mkdir -p dist/src/indexer/data && cp -r src/indexer/data/* dist/src/indexer/data/",
