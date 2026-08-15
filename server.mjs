@@ -2,7 +2,7 @@
 
 import compression from 'compression';
 import express from 'express';
-import { readFile } from 'node:fs/promises';
+import { createReadStream, promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -175,20 +175,27 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
 
   app.get('/takeout-metadata', async (_req, res, next) => {
     const outputFile = state.controller?.outFile ?? outputFileFor(state.cfg);
+
     if (!outputFile) {
       res.status(503).json({ error: 'TARGET_ROOT is not configured' });
       return;
     }
 
     try {
-      const raw = await readFile(outputFile);
+      const stat = await fs.stat(outputFile);
+
       res.type('application/x-ndjson');
-      res.send(raw);
+      res.setHeader('Content-Length', stat.size);
+      res.setHeader('Last-Modified', stat.mtime.toUTCString());
+      res.setHeader('Cache-Control', 'no-cache');
+
+      createReadStream(outputFile).pipe(res);
     } catch (error) {
       if (error.code === 'ENOENT') {
         res.status(404).json({ error: 'Generated file is not available' });
         return;
       }
+
       next(error);
     }
   });
