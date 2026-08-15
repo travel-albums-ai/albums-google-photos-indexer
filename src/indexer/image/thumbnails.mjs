@@ -31,6 +31,7 @@ export async function createThumbnailAndPreview(
       kernel: sharp.kernel.linear,
       fastShrinkOnLoad: true,
     })
+    .rotate()
     .withMetadata()
     .jpeg({
       quality: 70,
