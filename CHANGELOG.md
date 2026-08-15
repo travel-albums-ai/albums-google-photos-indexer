@@ -1,3 +1,9 @@
+## [1.13.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.12.0...v1.13.0) (2026-08-15)
+
+### Features
+
+* update package version to 1.11.0, add compression dependency, and enhance thumbnail creation with rotation ([10fa111](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/10fa1114927ae90b3371178f18b7f2a2e39f75c4))
+
 ## [1.12.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.11.0...v1.12.0) (2026-08-14)
 
 ### Features
