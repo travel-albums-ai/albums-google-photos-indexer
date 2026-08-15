@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 import express from 'express';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import compression from 'compression';
 
 import startIndexer from './indexer-cli.mjs';
 import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
@@ -34,6 +35,12 @@ function isWithinRoot(filePath, root) {
 
 export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
   const app = express();
+  const metadataCache = {
+    filePath: null,
+    mtimeMs: null,
+    size: null,
+    raw: null,
+  };
   const allowedOrigins = new Set([
     'https://web-app-travel-albums.vercel.app',
     'http://web-app-travel-albums.vercel.app',
@@ -66,6 +73,32 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     controller: null,
     status: 'idle',
     error: null,
+  };
+
+  app.use(compression({
+    threshold: 0,
+    filter(req, res) {
+      if (res.getHeader('Content-Type')?.startsWith('application/x-ndjson')) {
+        return true;
+      }
+      return compression.filter(req, res);
+    },
+  }));
+
+  const readMetadata = async outputFile => {
+    const fileStats = await stat(outputFile);
+    if (metadataCache.filePath === outputFile
+      && metadataCache.mtimeMs === fileStats.mtimeMs
+      && metadataCache.size === fileStats.size) {
+      return metadataCache.raw;
+    }
+
+    const raw = await readFile(outputFile, 'utf8');
+    metadataCache.filePath = outputFile;
+    metadataCache.mtimeMs = fileStats.mtimeMs;
+    metadataCache.size = fileStats.size;
+    metadataCache.raw = raw;
+    return raw;
   };
 
   const getStatus = () => {
@@ -169,7 +202,7 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     }
 
     try {
-      const raw = await readFile(outputFile, 'utf8');
+      const raw = await readMetadata(outputFile);
       res.type('application/x-ndjson');
       res.send(raw);
     } catch (error) {

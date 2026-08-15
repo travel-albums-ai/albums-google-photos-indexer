@@ -38,7 +38,11 @@ const baseUrl = `http://127.0.0.1:${address.port}`;
 
 async function request(route, options) {
   const response = await fetch(`${baseUrl}${route}`, options);
-  return { response, body: await response.json() };
+  const contentType = response.headers.get('content-type') ?? '';
+  const body = contentType.includes('application/json')
+    ? await response.json()
+    : await response.text();
+  return { response, body };
 }
 
 try {
@@ -65,32 +69,37 @@ try {
   assert.equal(imageResponse.headers.get('cache-control'), 'public, max-age=31536000, immutable');
 
   imageResponse = await fetch(`${baseUrl}/images/${rootIndex}/../outside.jpg`);
-  assert.equal(imageResponse.status, 400);
+  assert.equal(imageResponse.status, 404);
 
-  result = await request('/on', { method: 'POST' });
+  result = await request('/on');
   assert.equal(result.response.status, 202);
   assert.equal(result.body.started, true);
   assert.equal(controllers.length, 1);
 
-  result = await request('/on', { method: 'POST' });
+  result = await request('/on');
   assert.equal(result.response.status, 200);
   assert.equal(result.body.started, false);
   assert.equal(controllers.length, 1);
 
-  result = await request('/off', { method: 'POST' });
+  result = await request('/off');
   assert.equal(result.response.status, 200);
   assert.equal(result.body.status, 'stopped');
 
-  result = await request('/off', { method: 'POST' });
+  result = await request('/off');
   assert.equal(result.response.status, 200);
   assert.equal(result.body.status, 'stopped');
 
-  await fsp.writeFile(path.join(targetRoot, 'metadata.json'), '{"ready":true}\n');
-  const fileResponse = await fetch(`${baseUrl}/metadata`);
+  const metadata = '{"ready":true}\n'.repeat(100);
+  await fsp.writeFile(path.join(targetRoot, 'metadata.json'), metadata);
+  const fileResponse = await fetch(`${baseUrl}/takeout-metadata`, {
+    headers: { 'Accept-Encoding': 'gzip' },
+  });
   assert.equal(fileResponse.status, 200);
-  assert.equal(await fileResponse.text(), '{"ready":true}\n');
+  assert.equal(fileResponse.headers.get('content-encoding'), 'gzip');
+  assert.equal(fileResponse.headers.get('vary'), 'Accept-Encoding');
+  assert.equal(await fileResponse.text(), metadata);
 
-  result = await request('/on', { method: 'POST' });
+  result = await request('/on');
   assert.equal(result.response.status, 202);
   assert.equal(result.body.started, true);
   assert.equal(controllers.length, 2);
