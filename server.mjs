@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
+import compression from 'compression';
 import express from 'express';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import compression from 'compression';
 
 import startIndexer from './indexer-cli.mjs';
 import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
