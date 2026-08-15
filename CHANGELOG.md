@@ -1,3 +1,9 @@
+## [1.14.2](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.1...v1.14.2) (2026-08-15)
+
+### Bug Fixes
+
+* optimize file reading in takeout-metadata endpoint; switch to streaming and add headers ([357d801](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/357d801f259ab520d8a963ee9e70d18108b9368e))
+
 ## [1.14.1](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.0...v1.14.1) (2026-08-15)
 
 ### Bug Fixes
