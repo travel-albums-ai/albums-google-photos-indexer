@@ -1,3 +1,9 @@
+## [1.14.1](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.0...v1.14.1) (2026-08-15)
+
+### Bug Fixes
+
+* update compression threshold and cache control duration; improve file reading ([d495d63](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/d495d63aee986fbdeab7d890ceebc64d4d4a7f89))
+
 ## [1.14.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.13.0...v1.14.0) (2026-08-15)
 
 ### Features
