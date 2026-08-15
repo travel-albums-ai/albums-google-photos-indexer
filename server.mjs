@@ -69,8 +69,8 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     error: null,
   };
 
-    app.use(compression({
-    threshold: 0,
+  app.use(compression({
+    threshold: 1024,
     filter(req, res) {
       if (res.getHeader('Content-Type')?.startsWith('application/x-ndjson')) {
         return true;
@@ -126,7 +126,7 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
       return;
     }
 
-    res.set('Cache-Control', 'public, max-age=36000, immutable');
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.sendFile(absolutePath, error => {
       if (error && !res.headersSent) res.status(404).json({ error: 'Image not found' });
     });
@@ -181,7 +181,7 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     }
 
     try {
-      const raw = await readFile(outputFile, 'utf8');
+      const raw = await readFile(outputFile);
       res.type('application/x-ndjson');
       res.send(raw);
     } catch (error) {
