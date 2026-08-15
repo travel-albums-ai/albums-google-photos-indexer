@@ -1,3 +1,13 @@
+## [1.14.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.13.0...v1.14.0) (2026-08-15)
+
+### Features
+
+* add compression middleware and optimize metadata reading in server; update tests for new endpoints ([c5c7bdd](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/c5c7bdd645b5931a84d74d971f39157a323dbefe))
+
+### Bug Fixes
+
+* correct import order for compression middleware in server ([d6e5745](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/d6e574521caeb9bc393d4e0b47a1c7304f352149))
+
 ## [1.13.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.12.0...v1.13.0) (2026-08-15)
 
 ### Features
