@@ -39,6 +39,7 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     'https://web-app-travel-albums.vercel.app',
     'http://web-app-travel-albums.vercel.app',
     'http://localhost:5173',
+    'http://localhost:4173',
   ]);
 
   app.use((req, res, next) => {
