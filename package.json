@@ -1,6 +1,6 @@
 {
   "name": "albums-google-photos-indexer",
-  "version": "1.14.2",
+  "version": "1.14.3",
   "type": "module",
   "scripts": {
     "prestart": "npm run build",

@@ -1,3 +1,9 @@
+## [1.14.3](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.2...v1.14.3) (2026-08-16)
+
+### Bug Fixes
+
+* add localhost:4173 to allowed origins for CORS ([fdab0c9](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/fdab0c96aa3096f451326740d6effc045404344f))
+
 ## [1.14.2](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.1...v1.14.2) (2026-08-15)
 
 ### Bug Fixes
