@@ -31,7 +31,7 @@ function createFakeIndexer({ cfg }) {
 }
 
 const { app } = createServer({
-  cfg: { TARGET_ROOT: targetRoot, TAKEOUT_ROOTS: [takeoutRoot] },
+  cfg: { TARGET_ROOT: targetRoot, TAKEOUT_ROOTS: [takeoutRoot], EXISTING_OPTION: 'keep-me' },
   configPath,
   indexerStart: createFakeIndexer,
 });
@@ -56,17 +56,22 @@ try {
 
   result = await request('/config');
   assert.equal(result.response.status, 200);
-  assert.deepEqual(result.body, { TARGET_ROOT: targetRoot, TAKEOUT_ROOTS: [takeoutRoot] });
+  assert.deepEqual(result.body, {
+    TARGET_ROOT: targetRoot,
+    TAKEOUT_ROOTS: [takeoutRoot],
+    EXISTING_OPTION: 'keep-me',
+  });
 
   const updatedConfig = {
     TARGET_ROOT: targetRoot,
     TAKEOUT_ROOTS: [takeoutRoot],
+    EXISTING_OPTION: 'keep-me',
     INDEXER_CONCURRENCY: 3,
   };
   result = await request('/config', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updatedConfig),
+    body: JSON.stringify({ INDEXER_CONCURRENCY: 3 }),
   });
   assert.equal(result.response.status, 200);
   assert.deepEqual(result.body, updatedConfig);

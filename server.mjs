@@ -165,8 +165,9 @@ export function createServer({ cfg = {}, configPath = null, indexerStart = start
     }
 
     try {
-      await fs.writeFile(configPath, `${JSON.stringify(req.body, null, 2)}\n`, 'utf8');
-      state.cfg = req.body;
+      const nextConfig = { ...state.cfg, ...req.body };
+      await fs.writeFile(configPath, `${JSON.stringify(nextConfig, null, 2)}\n`, 'utf8');
+      state.cfg = nextConfig;
       res.json(state.cfg);
     } catch (error) {
       next(error);
