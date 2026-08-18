@@ -35,6 +35,18 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 # ------------------------------------------------------------
+# Application icon
+# ------------------------------------------------------------
+
+$logoPath = Join-Path $root "logo.ico"
+
+if (-not (Test-Path $logoPath)) {
+    throw "Missing application icon: $logoPath"
+}
+
+$appIcon = [System.Drawing.Icon]::new($logoPath)
+
+# ------------------------------------------------------------
 # Status icons
 # ------------------------------------------------------------
 
@@ -69,9 +81,6 @@ function New-StatusIcon {
 $greenIcon = New-StatusIcon ([System.Drawing.Color]::LimeGreen)
 $redIcon   = New-StatusIcon ([System.Drawing.Color]::Crimson)
 
-# Application icon
-$appIcon = [System.Drawing.SystemIcons]::Application
-
 # ------------------------------------------------------------
 # Tray icon
 # ------------------------------------------------------------
@@ -87,15 +96,14 @@ $notify.Visible = $true
 
 $menu = New-Object System.Windows.Forms.ContextMenuStrip
 
-# Status
 $statusItem = $menu.Items.Add("Server: Stopped")
 $statusItem.Enabled = $false
 $statusItem.Image = $redIcon
 
 $menu.Items.Add("-")
 
-# Application
 $openApp = $menu.Items.Add("Check Server")
+$openApp.Image = $appIcon.ToBitmap()
 
 $github = $menu.Items.Add("GitHub Project")
 $github.Image = $appIcon.ToBitmap()
@@ -106,6 +114,7 @@ $deployed.Image = $appIcon.ToBitmap()
 $menu.Items.Add("-")
 
 $exit = $menu.Items.Add("Exit")
+$exit.Image = $appIcon.ToBitmap()
 
 $notify.ContextMenuStrip = $menu
 
@@ -146,16 +155,12 @@ $exit.Add_Click({
     [System.Windows.Forms.Application]::Exit()
 })
 
-# Double-click tray icon opens status page.
 $notify.Add_DoubleClick({
     Start-Process "$baseUrl/status"
 })
 
 # ------------------------------------------------------------
 # Live status timer
-#
-# ONLY checks the local node.exe process.
-# No HTTP requests are made here.
 # ------------------------------------------------------------
 
 $timer = New-Object System.Windows.Forms.Timer
@@ -168,10 +173,21 @@ $timer.Add_Tick({
 $timer.Start()
 
 # ------------------------------------------------------------
-# Start server process
+# Start server
 # ------------------------------------------------------------
 
 Start-Server
 Update-Status
 
 [System.Windows.Forms.Application]::Run()
+
+# ------------------------------------------------------------
+# Cleanup
+# ------------------------------------------------------------
+
+$notify.Visible = $false
+$notify.Dispose()
+
+$appIcon.Dispose()
+$greenIcon.Dispose()
+$redIcon.Dispose()

@@ -53,6 +53,7 @@ await fs.copyFile(path.join(projectDir, 'server.mjs'), path.join(outputDir, 'ser
 await fs.copyFile(path.join(projectDir, 'indexer-cli.mjs'), path.join(outputDir, 'indexer-cli.mjs'));
 await fs.copyFile(path.join(projectDir, 'server-config-win.json'), path.join(outputDir, 'server-config.json'));
 await fs.copyFile(path.join(projectDir, 'README.md'), path.join(outputDir, 'README.md'));
+await fs.copyFile(path.join(projectDir, 'logo.ico'), path.join(outputDir, 'logo.ico'));
 await fs.copyFile(path.join(projectDir, target.launcher), path.join(outputDir, target.launcher));
 await fs.copyFile(path.join(projectDir, target.trayLauncher), path.join(outputDir, target.trayLauncher));
 
