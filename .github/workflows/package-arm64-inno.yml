@@ -61,29 +61,10 @@ jobs:
 AppName=__APP_NAME__
 AppVersion=__VERSION__
 DefaultDirName={autopf}\__APP_NAME__
-DefaultGroupName=__APP_NAME__
-ArchitecturesAllowed=arm64
-ArchitecturesInstallIn64BitMode=arm64
-OutputDir=installer-output
-OutputBaseFilename=__OUTPUT_NAME__
-Compression=lzma
-SolidCompression=yes
-WizardStyle=modern
-
-[Files]
-Source: "dist-arm64\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
-
-[Icons]
-Name: "{group}\Run __APP_NAME__"; Filename: "{app}\run-arm64.cmd"; WorkingDir: "{app}"
-
-[Run]
-Filename: "{app}\run-arm64.cmd"; Description: "Launch __APP_NAME__"; Flags: nowait postinstall skipifsilent
-"@
-
-          $iss = $iss.Replace("__APP_NAME__", $appName)
-          $iss = $iss.Replace("__VERSION__", $ver)
-          $iss = $iss.Replace("__OUTPUT_NAME__", $outBase)
-
+              $templatePath = '.github/installer/installer-template.iss'
+              if (-Not (Test-Path $templatePath)) { Write-Error "Template not found: $templatePath"; exit 1 }
+              $issTemplate = Get-Content $templatePath -Raw
+              $iss = $issTemplate -f $appName, $ver, $outBase
           New-Item -ItemType Directory -Force -Path "installer-output" | Out-Null
 
           $iss | Out-File `
