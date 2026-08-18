@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 import startIndexer from './indexer-cli.mjs';
 import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
-import { loadConfigFromArgv } from './src/indexer/io/load-config.mjs';
+import { configPathFromArgv, loadConfigFromArgv } from './src/indexer/io/load-config.mjs';
 
 const DEFAULT_PORT = 3001;
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.tif', '.tiff', '.heic', '.heif']);
@@ -33,7 +33,7 @@ function isWithinRoot(filePath, root) {
   return filePath === root || filePath.startsWith(`${root}${path.sep}`);
 }
 
-export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
+export function createServer({ cfg = {}, configPath = null, indexerStart = startIndexer } = {}) {
   const app = express();
   // const allowedOrigins = new Set([
   //   'https://web-app-travel-albums.vercel.app',
@@ -66,8 +66,6 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     next();
   });
 
-  const targetRoot = cfg?.TARGET_ROOT ? path.resolve(cfg.TARGET_ROOT) : null;
-  const takeoutRoots = takeoutRootsFor(cfg);
   const state = {
     cfg,
     controller: null,
@@ -98,8 +96,16 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     };
   };
 
-  if (targetRoot) {
-    app.use('/thumbnails', express.static(path.join(targetRoot, CACHE_FOLDER), {
+  app.use(express.json());
+
+  app.use('/thumbnails', (req, res, next) => {
+    const targetRoot = state.cfg?.TARGET_ROOT ? path.resolve(state.cfg.TARGET_ROOT) : null;
+    if (!targetRoot) {
+      next();
+      return;
+    }
+
+    express.static(path.join(targetRoot, CACHE_FOLDER), {
       immutable: true,
       maxAge: '365d',
       index: false,
@@ -108,12 +114,13 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
       setHeaders(response) {
         response.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       },
-    }));
-  }
+    })(req, res, next);
+  });
 
   app.get(/^\/images\/([^/]+)\/(.+)$/, (req, res) => {
     const rootIndex = req.params[0];
     const relativePath = req.params[1];
+    const takeoutRoots = takeoutRootsFor(state.cfg);
     const root = takeoutRoots.find(candidate => Buffer.from(candidate).toString('base64') === rootIndex);
 
     if (!root || !relativePath) {
@@ -144,6 +151,26 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
 
   app.get('/config', (_req, res) => {
     res.json(state.cfg);
+  });
+
+  app.put('/config', async (req, res, next) => {
+    if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
+      res.status(400).json({ error: 'Config must be a JSON object' });
+      return;
+    }
+
+    if (!configPath) {
+      res.status(503).json({ error: 'Config file path is not configured' });
+      return;
+    }
+
+    try {
+      await fs.writeFile(configPath, `${JSON.stringify(req.body, null, 2)}\n`, 'utf8');
+      state.cfg = req.body;
+      res.json(state.cfg);
+    } catch (error) {
+      next(error);
+    }
   });
 
   app.get('/health', (_req, res) => {
@@ -214,8 +241,9 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
 }
 
 export async function startServer({ cfg, port = process.env.PORT || DEFAULT_PORT } = {}) {
+  const configPath = configPathFromArgv();
   const config = cfg ?? await loadConfigFromArgv();
-  const { app, state, getStatus } = createServer({ cfg: config });
+  const { app, state, getStatus } = createServer({ cfg: config, configPath });
   const server = app.listen(Number(port), () => {
     console.log(`Indexer server listening on port ${port}`);
   });

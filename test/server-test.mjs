@@ -8,11 +8,14 @@ import { createServer } from '../server.mjs';
 
 const targetRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'albums-indexer-server-'));
 const takeoutRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'albums-indexer-takeout-'));
+const configPath = path.join(os.tmpdir(), `albums-indexer-server-${Date.now()}.json`);
 const rootIndex = Buffer.from(path.resolve(takeoutRoot)).toString('base64');
 const controllers = [];
+const startedConfigs = [];
 
-function createFakeIndexer() {
+function createFakeIndexer({ cfg }) {
   let resolveDone;
+  startedConfigs.push(cfg);
   const controller = {
     status: 'running',
     progress: { getState: () => ({ totalFound: 1, totalFiles: 1, done: 0, preindexed: 0, failed: 0 }) },
@@ -29,6 +32,7 @@ function createFakeIndexer() {
 
 const { app } = createServer({
   cfg: { TARGET_ROOT: targetRoot, TAKEOUT_ROOTS: [takeoutRoot] },
+  configPath,
   indexerStart: createFakeIndexer,
 });
 const server = app.listen(0);
@@ -53,6 +57,20 @@ try {
   result = await request('/config');
   assert.equal(result.response.status, 200);
   assert.deepEqual(result.body, { TARGET_ROOT: targetRoot, TAKEOUT_ROOTS: [takeoutRoot] });
+
+  const updatedConfig = {
+    TARGET_ROOT: targetRoot,
+    TAKEOUT_ROOTS: [takeoutRoot],
+    INDEXER_CONCURRENCY: 3,
+  };
+  result = await request('/config', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedConfig),
+  });
+  assert.equal(result.response.status, 200);
+  assert.deepEqual(result.body, updatedConfig);
+  assert.deepEqual(JSON.parse(await fsp.readFile(configPath, 'utf8')), updatedConfig);
 
   result = await request('/metadata');
   assert.equal(result.response.status, 404);
@@ -79,6 +97,7 @@ try {
   assert.equal(result.response.status, 202);
   assert.equal(result.body.started, true);
   assert.equal(controllers.length, 1);
+  assert.deepEqual(startedConfigs[0], updatedConfig);
 
   result = await request('/on');
   assert.equal(result.response.status, 200);
@@ -114,6 +133,7 @@ try {
   server.close();
   await fsp.rm(targetRoot, { recursive: true, force: true });
   await fsp.rm(takeoutRoot, { recursive: true, force: true });
+  await fsp.rm(configPath, { force: true });
 }
 
 console.log('Server test passed');

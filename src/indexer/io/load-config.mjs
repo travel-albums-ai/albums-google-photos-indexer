@@ -1,10 +1,15 @@
 import { readFile } from 'node:fs/promises';
 
+export function configPathFromArgv(argv = process.argv) {
+  const idx = argv.indexOf('--config');
+  return idx !== -1 && argv[idx + 1] ? argv[idx + 1] : null;
+}
+
 export async function loadConfigFromArgv() {
-  const idx = process.argv.indexOf('--config');
-  if (idx !== -1 && process.argv[idx + 1]) {
+  const configPath = configPathFromArgv();
+  if (configPath) {
     try {
-      const raw = await readFile(process.argv[idx + 1], 'utf8');
+      const raw = await readFile(configPath, 'utf8');
       return JSON.parse(raw);
     } catch (err) {
       console.error('Failed to read config file:', err.message);

@@ -130,6 +130,8 @@ The server starts idle. Use these routes to control and inspect the indexer:
 | --- | --- | --- |
 | `GET` | `/health` | Returns `{ "status": "ok" }`. |
 | `GET` | `/status` | Returns lifecycle status, progress, output path, and errors. |
+| `GET` | `/config` | Returns the current configuration object. |
+| `PUT` | `/config` | Replaces the configuration object, writes it to the configured file, and applies it to subsequent server operations. |
 | `GET` | `/on` | Starts indexing and returns `202`; repeated calls while running are idempotent. |
 | `GET` | `/off` | Requests a cooperative stop; repeated calls are idempotent. |
 | `GET` | `/metadata` | Serves `TARGET_ROOT/metadata.json` as NDJSON, or `404` until it exists. |
