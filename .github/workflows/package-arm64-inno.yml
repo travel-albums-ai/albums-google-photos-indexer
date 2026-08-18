@@ -54,22 +54,20 @@ jobs:
 
           $outBase = "$appName-arm64-$ver"
 
-          # Use placeholders that do NOT conflict with Inno Setup's
-          # {app}, {group}, {autopf}, etc.
-          $iss = @"
-[Setup]
-AppName=__APP_NAME__
-AppVersion=__VERSION__
-DefaultDirName={autopf}\__APP_NAME__
-              $templatePath = '.github/installer/installer-template.iss'
-              if (-Not (Test-Path $templatePath)) { Write-Error "Template not found: $templatePath"; exit 1 }
-              $issTemplate = Get-Content $templatePath -Raw
-              $iss = $issTemplate -f $appName, $ver, $outBase
+          $templatePath = '.github/installer/installer-template.iss'
+          if (-Not (Test-Path $templatePath)) { Write-Error "Template not found: $templatePath"; exit 1 }
+          $issTemplate = Get-Content $templatePath -Raw
+
+          # Ensure the template writes outputs into installer-output
+          if ($issTemplate -notmatch 'OutputDir=') {
+            $issTemplate = $issTemplate -replace 'OutputBaseFilename=\{2\}', "OutputDir=installer-output`nOutputBaseFilename={2}"
+          }
+
+          $iss = $issTemplate -f $appName, $ver, $outBase
+
           New-Item -ItemType Directory -Force -Path "installer-output" | Out-Null
 
-          $iss | Out-File `
-            -FilePath "installer-arm64.iss" `
-            -Encoding ascii
+          $iss | Out-File -FilePath "installer-arm64.iss" -Encoding ascii
 
           Write-Host "Generated installer-arm64.iss:"
           Get-Content "installer-arm64.iss"
