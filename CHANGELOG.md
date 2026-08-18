@@ -1,3 +1,9 @@
+## [1.21.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.20.0...v1.21.0) (2026-08-18)
+
+### Features
+
+* create installer template for ARM64 packaging workflow ([2ef7e6a](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/2ef7e6a138ab0c996f61f547dafcbaf286751a72))
+
 ## [1.20.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.19.1...v1.20.0) (2026-08-18)
 
 ### Features
