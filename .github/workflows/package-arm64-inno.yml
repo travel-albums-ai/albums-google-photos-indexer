@@ -31,7 +31,7 @@ jobs:
           $ver = $pkg.version
           $appName = $pkg.name
           $outBase = "$($appName)-arm64-$ver"
-          $iss = @"
+          $issTemplate = @"
 [Setup]
 AppName={0}
 AppVersion={1}
@@ -42,14 +42,15 @@ Compression=lzma
 SolidCompression=yes
 
 [Files]
-Source: "dist-arm64\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+Source: "dist-arm64\\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\Run {0}"; Filename: "{app}\run-arm64.cmd"; WorkingDir: "{app}"
+Name: "{group}\\Run {0}"; Filename: "{app}\\run-arm64.cmd"; WorkingDir: "{app}"
 
 [Run]
-Filename: "{app}\run-arm64.cmd"; Description: "Launch {0}"; Flags: nowait postinstall skipifsilent
-"@ -f $appName, $ver, $outBase
+Filename: "{app}\\run-arm64.cmd"; Description: "Launch {0}"; Flags: nowait postinstall skipifsilent
+"@
+          $iss = $issTemplate -f $appName, $ver, $outBase
           $iss | Out-File -FilePath installer-arm64.iss -Encoding ascii
 
       - name: Compile installer with Inno Setup
