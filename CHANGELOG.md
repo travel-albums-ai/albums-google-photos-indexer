@@ -1,3 +1,9 @@
+## [1.15.1](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.15.0...v1.15.1) (2026-08-18)
+
+### Bug Fixes
+
+* remove unused application icon assignments in context menu ([fa62e5e](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/fa62e5eafdaa92724fcd9d92296123f8b83bd53c))
+
 ## [1.15.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.4...v1.15.0) (2026-08-18)
 
 ### Features
