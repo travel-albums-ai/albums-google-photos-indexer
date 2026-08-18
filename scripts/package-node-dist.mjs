@@ -47,7 +47,23 @@ await fs.mkdir(outputDir, { recursive: true });
 const response = await fetch(nodeUrl);
 if (!response.ok) throw new Error(`Failed to download Node.js: ${response.status} ${nodeUrl}`);
 await fs.writeFile(archivePath, Buffer.from(await response.arrayBuffer()));
-execFileSync('unzip', ['-q', archivePath, '-d', os.tmpdir()]);
+
+try {
+  if (process.platform === 'win32') {
+    execFileSync('powershell', [
+      '-NoProfile',
+      '-Command',
+      `Expand-Archive -LiteralPath "${archivePath}" -DestinationPath "${os.tmpdir()}" -Force`,
+    ], { stdio: 'inherit', shell: true });
+  } else {
+    execFileSync('unzip', ['-q', archivePath, '-d', os.tmpdir()]);
+  }
+} catch (err) {
+  if (err && err.code === 'ENOENT') {
+    throw new Error("Required extraction command not found. Install 'unzip' (on Unix) or ensure PowerShell is available on Windows. Original: " + err.message);
+  }
+  throw err;
+}
 
 await fs.copyFile(path.join(extractDir, 'node.exe'), path.join(outputDir, 'node.exe'));
 await fs.cp(path.join(projectDir, 'src'), path.join(outputDir, 'src'), { recursive: true });
@@ -59,25 +75,59 @@ await fs.copyFile(path.join(projectDir, 'logo.ico'), path.join(outputDir, 'logo.
 await fs.copyFile(path.join(projectDir, target.launcher), path.join(outputDir, target.launcher));
 await fs.copyFile(path.join(projectDir, target.trayLauncher), path.join(outputDir, target.trayLauncher));
 
-execFileSync('npm', [
-  'install',
-  '--prefix', outputDir,
-  '--no-save',
-  '--package-lock=false',
-  '--ignore-scripts',
-  '--force',
-  '--include=optional',
-  'express@5.1.0',
-  'sharp@0.35.3',
-  `${target.sharp}@0.35.3`,
-  `${target.libvips}@1.3.2`,
-], { cwd: projectDir, stdio: 'inherit' });
+if (process.platform === 'win32') {
+  execFileSync('npm.cmd', [
+    'install',
+    '--prefix', outputDir,
+    '--no-save',
+    '--package-lock=false',
+    '--ignore-scripts',
+    '--force',
+    '--include=optional',
+    'express@5.1.0',
+    'sharp@0.35.3',
+    `${target.sharp}@0.35.3`,
+    `${target.libvips}@1.3.2`,
+  ], {
+    cwd: projectDir,
+    stdio: 'inherit',
+    shell: true,
+  });
+} else {
+  execFileSync('npm', [
+    'install',
+    '--prefix', outputDir,
+    '--no-save',
+    '--package-lock=false',
+    '--ignore-scripts',
+    '--force',
+    '--include=optional',
+    'express@5.1.0',
+    'sharp@0.35.3',
+    `${target.sharp}@0.35.3`,
+    `${target.libvips}@1.3.2`,
+  ], { cwd: projectDir, stdio: 'inherit' });
+}
+
 
 await fs.rm(zipPath, { force: true });
-execFileSync('zip', ['-qr', zipPath, path.basename(outputDir)], {
-  cwd: path.dirname(outputDir),
-  stdio: 'inherit',
-});
+try {
+  if (process.platform === 'win32') {
+    // Use PowerShell Compress-Archive on Windows
+    execFileSync('powershell', [
+      '-NoProfile',
+      '-Command',
+      `Compress-Archive -Force -Path "${path.basename(outputDir)}\\*" -DestinationPath "${zipPath}"`,
+    ], { cwd: path.dirname(outputDir), stdio: 'inherit', shell: true });
+  } else {
+    execFileSync('zip', ['-qr', zipPath, path.basename(outputDir)], { cwd: path.dirname(outputDir), stdio: 'inherit' });
+  }
+} catch (err) {
+  if (err && err.code === 'ENOENT') {
+    throw new Error("Required 'zip' command not found. Install 'zip' (on Unix) or ensure PowerShell is available on Windows. Original: " + err.message);
+  }
+  throw err;
+}
 
 await fs.rm(archivePath, { force: true });
 await fs.rm(extractDir, { recursive: true, force: true });
