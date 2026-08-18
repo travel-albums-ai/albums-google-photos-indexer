@@ -1,3 +1,9 @@
+## [1.15.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.4...v1.15.0) (2026-08-18)
+
+### Features
+
+* add application icon and ensure its presence in launcher ([8cfdedf](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/8cfdedf83234e02af552e43c94ae1313824ec59d))
+
 ## [1.14.4](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.3...v1.14.4) (2026-08-18)
 
 ### Bug Fixes
