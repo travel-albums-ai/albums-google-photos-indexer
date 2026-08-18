@@ -1,3 +1,3 @@
 @echo off
 cd /d "%~dp0"
-node.exe server.mjs --config server-config.json %*
+start "" powershell.exe -ExecutionPolicy Bypass -File "%~dp0launcher.ps1"
