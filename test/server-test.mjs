@@ -50,6 +50,10 @@ try {
   assert.equal(result.response.status, 200);
   assert.equal(result.body.status, 'idle');
 
+  result = await request('/config');
+  assert.equal(result.response.status, 200);
+  assert.deepEqual(result.body, { TARGET_ROOT: targetRoot, TAKEOUT_ROOTS: [takeoutRoot] });
+
   result = await request('/metadata');
   assert.equal(result.response.status, 404);
 

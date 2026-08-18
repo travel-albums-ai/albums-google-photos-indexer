@@ -142,6 +142,10 @@ export function createServer({ cfg = {}, indexerStart = startIndexer } = {}) {
     res.json(getStatus());
   });
 
+  app.get('/config', (_req, res) => {
+    res.json(state.cfg);
+  });
+
   app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
   });
