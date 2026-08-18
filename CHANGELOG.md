@@ -1,3 +1,9 @@
+## [1.17.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.16.0...v1.17.0) (2026-08-18)
+
+### Features
+
+* add /config endpoint for retrieving and updating server configuration ([a506b79](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/a506b79b601420d3cfb5eecab589887271daec66))
+
 ## [1.16.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.15.2...v1.16.0) (2026-08-18)
 
 ### Features
