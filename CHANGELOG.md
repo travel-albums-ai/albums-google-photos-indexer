@@ -1,3 +1,9 @@
+## [1.22.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.21.0...v1.22.0) (2026-08-18)
+
+### Features
+
+* update Inno Setup script generation to ensure output directory and filename are correctly set ([a6af271](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/a6af271caee48a7a9a793fca8a21899bdcf0d776))
+
 ## [1.21.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.20.0...v1.21.0) (2026-08-18)
 
 ### Features
