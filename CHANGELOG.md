@@ -1,3 +1,9 @@
+## [1.14.4](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.3...v1.14.4) (2026-08-18)
+
+### Bug Fixes
+
+* update server port to 3001 and modify allowed origins for CORS ([bdce738](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/bdce7383570cf09c75cced1250cdc75067a2ae02))
+
 ## [1.14.3](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.14.2...v1.14.3) (2026-08-16)
 
 ### Bug Fixes
