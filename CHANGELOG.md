@@ -1,3 +1,9 @@
+## [1.18.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.17.0...v1.18.0) (2026-08-18)
+
+### Features
+
+* update server configuration handling to merge existing options ([2e22cda](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/2e22cda2f71f11cfa5f20024464a620e1c271f02))
+
 ## [1.17.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.16.0...v1.17.0) (2026-08-18)
 
 ### Features
