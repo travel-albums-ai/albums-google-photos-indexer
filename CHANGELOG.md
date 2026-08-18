@@ -1,3 +1,9 @@
+## [1.19.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.18.0...v1.19.0) (2026-08-18)
+
+### Features
+
+* add workflow for packaging ARM64 installer with Inno Setup ([f7920a6](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/f7920a663ec96621c04ad36deb94e1f14b6e8d7f))
+
 ## [1.18.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.17.0...v1.18.0) (2026-08-18)
 
 ### Features
