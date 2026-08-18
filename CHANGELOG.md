@@ -1,3 +1,9 @@
+## [1.19.1](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.19.0...v1.19.1) (2026-08-18)
+
+### Bug Fixes
+
+* correct variable name for Inno Setup script template in ARM64 packaging workflow ([d39a26a](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/d39a26a3bd4a77c5c57e3a7dc8b52d8da6a87a2b))
+
 ## [1.19.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.18.0...v1.19.0) (2026-08-18)
 
 ### Features
