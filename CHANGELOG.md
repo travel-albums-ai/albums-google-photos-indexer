@@ -1,3 +1,9 @@
+## [1.20.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.19.1...v1.20.0) (2026-08-18)
+
+### Features
+
+* enhance ARM64 packaging workflow with verification steps and improved Inno Setup script generation ([e539ea6](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/e539ea6715058ce2aff585a29341e46682b5ab45))
+
 ## [1.19.1](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.19.0...v1.19.1) (2026-08-18)
 
 ### Bug Fixes
