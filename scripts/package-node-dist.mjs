@@ -47,7 +47,11 @@ await fs.mkdir(outputDir, { recursive: true });
 const response = await fetch(nodeUrl);
 if (!response.ok) throw new Error(`Failed to download Node.js: ${response.status} ${nodeUrl}`);
 await fs.writeFile(archivePath, Buffer.from(await response.arrayBuffer()));
-execFileSync('unzip', ['-q', archivePath, '-d', os.tmpdir()]);
+if (process.platform === 'win32') {
+  execFileSync('powershell', ['-NoProfile', '-Command', `Expand-Archive -LiteralPath "${archivePath}" -DestinationPath "${os.tmpdir()}" -Force`], { stdio: 'inherit' });
+} else {
+  execFileSync('unzip', ['-q', archivePath, '-d', os.tmpdir()]);
+}
 
 await fs.copyFile(path.join(extractDir, 'node.exe'), path.join(outputDir, 'node.exe'));
 await fs.cp(path.join(projectDir, 'src'), path.join(outputDir, 'src'), { recursive: true });
@@ -59,7 +63,8 @@ await fs.copyFile(path.join(projectDir, 'logo.ico'), path.join(outputDir, 'logo.
 await fs.copyFile(path.join(projectDir, target.launcher), path.join(outputDir, target.launcher));
 await fs.copyFile(path.join(projectDir, target.trayLauncher), path.join(outputDir, target.trayLauncher));
 
-execFileSync('npm', [
+const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+execFileSync(npmCmd, [
   'install',
   '--prefix', outputDir,
   '--no-save',
@@ -74,10 +79,15 @@ execFileSync('npm', [
 ], { cwd: projectDir, stdio: 'inherit' });
 
 await fs.rm(zipPath, { force: true });
-execFileSync('zip', ['-qr', zipPath, path.basename(outputDir)], {
-  cwd: path.dirname(outputDir),
-  stdio: 'inherit',
-});
+if (process.platform === 'win32') {
+  // Use PowerShell Compress-Archive on Windows
+  execFileSync('powershell', ['-NoProfile', '-Command', `Compress-Archive -Path "${path.basename(outputDir)}\\*" -DestinationPath "${zipPath}" -Force`], { cwd: path.dirname(outputDir), stdio: 'inherit' });
+} else {
+  execFileSync('zip', ['-qr', zipPath, path.basename(outputDir)], {
+    cwd: path.dirname(outputDir),
+    stdio: 'inherit',
+  });
+}
 
 await fs.rm(archivePath, { force: true });
 await fs.rm(extractDir, { recursive: true, force: true });
