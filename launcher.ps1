@@ -1,7 +1,7 @@
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $root
 
-$baseUrl = "http://localhost:3000"
+$baseUrl = "http://localhost:3001"
 $githubUrl = "https://github.com/travel-albums-ai"
 $deployedUrl = "https://web-app-travel-albums.vercel.app/#/allPhotos"
 
@@ -105,15 +105,6 @@ $deployed.Image = $appIcon.ToBitmap()
 
 $menu.Items.Add("-")
 
-# Server
-$start = $menu.Items.Add("Start Server")
-$start.Image = $appIcon.ToBitmap()
-
-$stop = $menu.Items.Add("Stop Server")
-$stop.Image = $appIcon.ToBitmap()
-
-$menu.Items.Add("-")
-
 $exit = $menu.Items.Add("Exit")
 
 $notify.ContextMenuStrip = $menu
@@ -151,19 +142,9 @@ $deployed.Add_Click({
     Start-Process $deployedUrl
 })
 
-$start.Add_Click({
-    Start-Server
-    Start-Process "$baseUrl/on"
-})
-
-$stop.Add_Click({
-    Start-Process "$baseUrl/off"
-})
-
 $exit.Add_Click({
     [System.Windows.Forms.Application]::Exit()
 })
-
 
 # Double-click tray icon opens status page.
 $notify.Add_DoubleClick({

@@ -111,7 +111,7 @@ available through the running controller and server status response.
 
 ## REST server
 
-Start the server on port 3000 using `server-config.json`:
+Start the server on port 3001 using `server-config.json`:
 
 ```bash
 npm start
@@ -342,7 +342,7 @@ npm run indexer
 3. Run the REST server
 
 ```bash
-# starts Express on port 3000 and remains idle until POST /on
+# starts Express on port 3001 and remains idle until POST /on
 npm start
 
 # use a different port
@@ -354,7 +354,7 @@ node server.mjs --config ./examples/server-config.json
 
 The server controls the indexer in the same Node.js process. It does not spawn a
 separate indexer process. Configuration is loaded from the file passed with
-`--config`, and the server listens on `PORT` or port `3000` by default.
+`--config`, and the server listens on `PORT` or port `3001` by default.
 
 `npm start` builds `dist/server.mjs` before launching it. The server bundle
 contains Express, the indexer, and sharp's JavaScript layer in one artifact.

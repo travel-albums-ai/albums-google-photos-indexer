@@ -16,7 +16,8 @@
     "dist:arm64": "node scripts/package-node-dist.mjs arm64 dist-arm64",
     "dist:x64": "node scripts/package-node-dist.mjs x64 dist-x64",
     "dist:package": "npm run dist:arm64 && npm run dist:x64",
-    "next": "semantic-release"
+    "next": "semantic-release",
+    "powershell:arm64": "cd ./dist-arm64 && powershell -ExecutionPolicy Bypass -File launcher.ps1"
   },
   "main": "dist/indexer-cli.mjs",
   "files": [
