@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const [, , architecture, outputArg] = process.argv;
 const outputDir = path.resolve(outputArg || `dist-${architecture}`);
@@ -32,7 +33,8 @@ if (!targets[architecture]) {
 }
 
 const target = targets[architecture];
-const projectDir = path.resolve(import.meta.dirname, '..');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const projectDir = path.resolve(__dirname, '..');
 const zipPath = path.join(projectDir, target.zipName);
 const archivePath = path.join(os.tmpdir(), `${target.nodeArchive}.zip`);
 const extractDir = path.join(os.tmpdir(), target.nodeArchive);
