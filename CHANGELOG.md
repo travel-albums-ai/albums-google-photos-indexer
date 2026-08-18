@@ -1,3 +1,9 @@
+## [1.15.2](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.15.1...v1.15.2) (2026-08-18)
+
+### Bug Fixes
+
+* replace node server execution with PowerShell script launcher in run scripts ([1bd3d92](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/1bd3d92eda134cc3f904df271e5d31855332ba5e))
+
 ## [1.15.1](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.15.0...v1.15.1) (2026-08-18)
 
 ### Bug Fixes
