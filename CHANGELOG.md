@@ -1,3 +1,9 @@
+## [1.24.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.23.0...v1.24.0) (2026-08-18)
+
+### Features
+
+* update Node.js version to 24 and streamline packaging process for ARM64 ([74fa8f4](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/74fa8f4213aa2e2c34e9d935d9578bdcfd7627de))
+
 ## [1.23.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.22.1...v1.23.0) (2026-08-18)
 
 ### Features
