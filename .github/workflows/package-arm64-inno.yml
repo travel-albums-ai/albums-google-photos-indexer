@@ -6,6 +6,7 @@ on:
 jobs:
   package-installer:
     runs-on: windows-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -14,54 +15,119 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: npm
 
       - name: Install npm dependencies
         run: npm ci
 
-      - name: Build dist-arm64
+      - name: Build ARM64 distribution
         run: npm run dist:arm64
 
-      - name: Install Inno Setup (Chocolatey)
-        run: choco install innosetup -y
+      - name: Verify ARM64 distribution
+        shell: pwsh
+        run: |
+          if (-Not (Test-Path "dist-arm64")) {
+            Write-Error "dist-arm64 folder was not created"
+            exit 1
+          }
+
+          Write-Host "Contents of dist-arm64:"
+          Get-ChildItem -Recurse "dist-arm64"
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
 
       - name: Generate Inno Setup script
         shell: pwsh
         run: |
           $pkg = Get-Content package.json -Raw | ConvertFrom-Json
+
           $ver = $pkg.version
-          $appName = $pkg.name
-          $outBase = "$($appName)-arm64-$ver"
-          $issTemplate = @"
+
+          if ($pkg.productName) {
+            $appName = $pkg.productName
+          } else {
+            $appName = $pkg.name
+          }
+
+          $outBase = "$appName-arm64-$ver"
+
+          # Use placeholders that do NOT conflict with Inno Setup's
+          # {app}, {group}, {autopf}, etc.
+          $iss = @"
 [Setup]
-AppName={0}
-AppVersion={1}
-DefaultDirName={pf}\{0}
-DefaultGroupName={0}
-OutputBaseFilename={2}
+AppName=__APP_NAME__
+AppVersion=__VERSION__
+DefaultDirName={autopf}\__APP_NAME__
+DefaultGroupName=__APP_NAME__
+ArchitecturesAllowed=arm64
+ArchitecturesInstallIn64BitMode=arm64
+OutputDir=installer-output
+OutputBaseFilename=__OUTPUT_NAME__
 Compression=lzma
 SolidCompression=yes
+WizardStyle=modern
 
 [Files]
-Source: "dist-arm64\\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+Source: "dist-arm64\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\\Run {0}"; Filename: "{app}\\run-arm64.cmd"; WorkingDir: "{app}"
+Name: "{group}\Run __APP_NAME__"; Filename: "{app}\run-arm64.cmd"; WorkingDir: "{app}"
 
 [Run]
-Filename: "{app}\\run-arm64.cmd"; Description: "Launch {0}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\run-arm64.cmd"; Description: "Launch __APP_NAME__"; Flags: nowait postinstall skipifsilent
 "@
-          $iss = $issTemplate -f $appName, $ver, $outBase
-          $iss | Out-File -FilePath installer-arm64.iss -Encoding ascii
 
-      - name: Compile installer with Inno Setup
+          $iss = $iss.Replace("__APP_NAME__", $appName)
+          $iss = $iss.Replace("__VERSION__", $ver)
+          $iss = $iss.Replace("__OUTPUT_NAME__", $outBase)
+
+          New-Item -ItemType Directory -Force -Path "installer-output" | Out-Null
+
+          $iss | Out-File `
+            -FilePath "installer-arm64.iss" `
+            -Encoding ascii
+
+          Write-Host "Generated installer-arm64.iss:"
+          Get-Content "installer-arm64.iss"
+
+      - name: Compile ARM64 installer
         shell: pwsh
         run: |
-          $isccPath = 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
-          if (-Not (Test-Path $isccPath)) { Write-Error "ISCC.exe not found at $isccPath"; exit 1 }
-          & $isccPath installer-arm64.iss
+          $isccPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+
+          if (-Not (Test-Path $isccPath)) {
+            Write-Error "ISCC.exe not found at $isccPath"
+            exit 1
+          }
+
+          & $isccPath "installer-arm64.iss"
+
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Inno Setup compilation failed with exit code $LASTEXITCODE"
+            exit $LASTEXITCODE
+          }
+
+      - name: Verify installer
+        shell: pwsh
+        run: |
+          Write-Host "Generated installer(s):"
+
+          if (-Not (Test-Path "installer-output")) {
+            Write-Error "installer-output folder was not created"
+            exit 1
+          }
+
+          Get-ChildItem "installer-output" -Filter "*.exe" |
+            ForEach-Object {
+              Write-Host "$($_.FullName) - $($_.Length) bytes"
+            }
 
       - name: Upload generated installer
         uses: actions/upload-artifact@v4
         with:
           name: installer-arm64
-          path: '*.exe'
+          path: installer-output/*.exe
+          if-no-files-found: error
