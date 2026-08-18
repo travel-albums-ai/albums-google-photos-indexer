@@ -1,3 +1,9 @@
+## [1.22.1](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.22.0...v1.22.1) (2026-08-18)
+
+### Bug Fixes
+
+* correct __dirname resolution in package-node-dist script ([edc073c](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/edc073c77bacab313a2782c36441df652d7cbddf))
+
 ## [1.22.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.21.0...v1.22.0) (2026-08-18)
 
 ### Features
