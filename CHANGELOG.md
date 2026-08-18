@@ -1,3 +1,9 @@
+## [1.25.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.24.0...v1.25.0) (2026-08-18)
+
+### Features
+
+* enhance packaging script to support PowerShell commands for Windows ([b69f4fc](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/b69f4fc162c6678f1b56a62be9401a8b4c364d18))
+
 ## [1.24.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.23.0...v1.24.0) (2026-08-18)
 
 ### Features
