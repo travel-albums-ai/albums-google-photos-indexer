@@ -48,6 +48,8 @@ execFileSync('bun', [
   '--compile',
   `--target=${target.targets[architecture]}`,
   `--outfile=${executablePath}`,
+  '--define:globalThis.__INDEXER_CLI_ENTRYPOINT__=false',
+  '--define:globalThis.__SERVER_ENTRYPOINT__=true',
   '--minify',
 ], { cwd: projectDir, stdio: 'inherit' });
 

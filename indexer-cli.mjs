@@ -2,7 +2,6 @@
 
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import EventEmitter from 'node:events';
 import { createSemaphore } from './src/indexer/concurrency/queue.mjs';
@@ -162,10 +161,7 @@ export function stop() {
 
 export default start;
 
-if (
-  path.basename(process.argv[1] ?? '') === path.basename(fileURLToPath(import.meta.url))
-  && !globalThis.__INDEXER_IMPORTED_IN_SERVER__
-) {
+if (process.env.INDEXER_CLI_ENTRYPOINT === 'true') {
   (async () => {
     try {
       _CURRENT_DONE = start();

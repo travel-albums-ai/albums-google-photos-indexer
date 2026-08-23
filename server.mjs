@@ -4,6 +4,7 @@ import compression from 'compression';
 import express from 'express';
 import { createReadStream, promises as fs } from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import startIndexer from './indexer-cli.mjs';
 import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
@@ -259,9 +260,15 @@ export async function startServer({ cfg, port = process.env.PORT || DEFAULT_PORT
   return { server, state, getStatus };
 }
 
-// if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (
+  globalThis.__SERVER_ENTRYPOINT__ === true
+  || (
+    globalThis.__SERVER_ENTRYPOINT__ === undefined
+    && path.basename(process.argv[1] ?? '') === path.basename(fileURLToPath(import.meta.url))
+  )
+) {
   startServer().catch(error => {
     console.error('\nServer failed to start:', error);
     process.exitCode = 1;
   });
-// }
+}
