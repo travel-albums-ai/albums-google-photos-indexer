@@ -1,3 +1,9 @@
+## [1.36.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.35.0...v1.36.0) (2026-08-23)
+
+### Features
+
+* add workflows for building and releasing Windows, macOS, and Ubuntu distributions ([461dd87](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/461dd87f1f11f9c0c07f8562ff326d095c616c3a))
+
 ## [1.35.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.34.0...v1.35.0) (2026-08-23)
 
 ### Features
