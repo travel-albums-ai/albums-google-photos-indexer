@@ -1,3 +1,15 @@
+## [1.29.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.28.0...v1.29.0) (2026-08-23)
+
+### Features
+
+* add semver dependency to package.json ([e1baf0d](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/e1baf0db39eef173701e74bb79f3eb783395af9a))
+* migrate from Node.js to Bun, update image processing and server scripts ([43ab7dd](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/43ab7dd9e301d8482099efa24f564bd28a61a0b5))
+
+### Bug Fixes
+
+* remove frozen-lockfile option from bun install command ([2a470ce](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/2a470ceb70f18effa1bbf61cd4566f798f2e2366))
+* remove frozen-lockfile option from bun install command ([ed82e59](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/ed82e598f632570979a4e3c993532791f8c8de75))
+
 ## [1.28.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.27.0...v1.28.0) (2026-08-23)
 
 ### Features
