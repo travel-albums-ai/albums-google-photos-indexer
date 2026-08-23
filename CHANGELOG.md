@@ -1,3 +1,9 @@
+## [1.39.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.38.0...v1.39.0) (2026-08-23)
+
+### 🚀 Features
+
+* format .releaserc.json for improved readability and structure ([aeee81e](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/aeee81e63e94dcd9f23685c644cf1a07940e29c6))
+
 ## [1.38.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.37.0...v1.38.0) (2026-08-23)
 
 ### Features
