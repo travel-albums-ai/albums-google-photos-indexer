@@ -1,3 +1,9 @@
+## [1.38.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.37.0...v1.38.0) (2026-08-23)
+
+### Features
+
+* add concurrent distribution scripts for Windows, macOS, and Ubuntu ([9f58513](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/9f58513bc235268fcdd89ff201eca4fc5d6db3bd))
+
 ## [1.37.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.36.0...v1.37.0) (2026-08-23)
 
 ### Features
