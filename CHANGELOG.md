@@ -1,3 +1,9 @@
+## [1.35.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.34.0...v1.35.0) (2026-08-23)
+
+### Features
+
+* enhance macOS build process with code signing and notarization instructions ([6bfa2cf](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/6bfa2cf89884904640f9b96db7e9d28f41c0282a))
+
 ## [1.34.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.33.0...v1.34.0) (2026-08-23)
 
 ### Features
