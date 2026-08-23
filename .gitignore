@@ -81,6 +81,12 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
+dist-windows-arm64
+dist-windows-x64
+dist-macos-arm64
+dist-macos-x64
+dist-ubuntu-arm64
+dist-ubuntu-x64
 dist-arm64
 dist-x64
 .output
@@ -144,5 +150,9 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 .test-output/metadata.json
-TravelAlbums-arm64.zip
-TravelAlbums-x64.zip
+TravelAlbums-windows-arm64.zip
+TravelAlbums-windows-x64.zip
+TravelAlbums-macos-arm64.zip
+TravelAlbums-macos-x64.zip
+TravelAlbums-ubuntu-arm64.zip
+TravelAlbums-ubuntu-x64.zip

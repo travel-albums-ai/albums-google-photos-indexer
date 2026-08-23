@@ -5,18 +5,38 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const [, , architecture, outputArg] = process.argv;
-const outputDir = path.resolve(outputArg || `dist-${architecture}`);
+const [, , platform, architecture] = process.argv;
 const targets = {
-  arm64: { bunTarget: 'bun-windows-arm64', launcher: 'run-arm64.cmd' },
-  x64: { bunTarget: 'bun-windows-x64', launcher: 'run-x64.cmd' },
+  windows: {
+    config: 'server-config-win.json',
+    executable: 'server.exe',
+    launchers: ['run-windows.cmd', 'launcher.ps1'],
+    targets: { arm64: 'bun-windows-arm64', x64: 'bun-windows-x64' },
+  },
+  macos: {
+    config: 'server-config.default.json',
+    executable: 'server',
+    launchers: ['run-macos.sh'],
+    targets: { arm64: 'bun-darwin-arm64', x64: 'bun-darwin-x64' },
+  },
+  ubuntu: {
+    config: 'server-config.default.json',
+    executable: 'server',
+    launchers: ['run-ubuntu.sh'],
+    targets: { arm64: 'bun-linux-arm64', x64: 'bun-linux-x64' },
+  },
 };
 
-if (!targets[architecture]) throw new Error(`Unsupported architecture: ${architecture}`);
+if (!targets[platform]) throw new Error(`Unsupported platform: ${platform}`);
+if (!targets[platform].targets[architecture]) {
+  throw new Error(`Unsupported architecture for ${platform}: ${architecture}`);
+}
 
-const target = targets[architecture];
+const target = targets[platform];
 const projectDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const zipPath = path.join(projectDir, `TravelAlbums-${architecture}.zip`);
+const outputDir = path.resolve(`dist-${platform}-${architecture}`);
+const zipPath = path.join(projectDir, `TravelAlbums-${platform}-${architecture}.zip`);
+const executablePath = path.join(outputDir, target.executable);
 
 await fs.rm(outputDir, { recursive: true, force: true });
 await fs.mkdir(outputDir, { recursive: true });
@@ -25,16 +45,26 @@ execFileSync('bun', [
   'build',
   path.join(projectDir, 'server.mjs'),
   '--compile',
-  `--target=${target.bunTarget}`,
-  `--outfile=${path.join(outputDir, 'server.exe')}`,
+  `--target=${target.targets[architecture]}`,
+  `--outfile=${executablePath}`,
   '--minify',
 ], { cwd: projectDir, stdio: 'inherit' });
 
-await fs.copyFile(path.join(projectDir, 'server-config-win.json'), path.join(outputDir, 'server-config.json'));
+await fs.copyFile(path.join(projectDir, target.config), path.join(outputDir, 'server-config.json'));
 await fs.copyFile(path.join(projectDir, 'README.md'), path.join(outputDir, 'README.md'));
-await fs.copyFile(path.join(projectDir, 'logo.ico'), path.join(outputDir, 'logo.ico'));
-await fs.copyFile(path.join(projectDir, target.launcher), path.join(outputDir, target.launcher));
-await fs.copyFile(path.join(projectDir, 'launcher.ps1'), path.join(outputDir, 'launcher.ps1'));
+for (const launcher of target.launchers) {
+  await fs.copyFile(path.join(projectDir, launcher), path.join(outputDir, launcher));
+}
+
+if (platform === 'windows') {
+  await fs.copyFile(path.join(projectDir, 'logo.ico'), path.join(outputDir, 'logo.ico'));
+}
+
+for (const launcher of target.launchers) {
+  if (launcher.endsWith('.sh')) {
+    await fs.chmod(path.join(outputDir, launcher), 0o755);
+  }
+}
 
 await fs.rm(zipPath, { force: true });
 if (process.platform === 'win32') {

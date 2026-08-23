@@ -21,7 +21,7 @@ This project aims to be simple for local use: a single JSON config file, a CLI, 
 - [CLI](#cli)
 - [Output](#output)
 - [REST server](#rest-server)
-- [Windows distribution](#windows-distribution)
+- [Platform distributions](#platform-distributions)
 - [Programmatic usage](#programmatic-usage)
 - [Development](#development)
 
@@ -203,23 +203,29 @@ The server starts idle. Use these routes to control and inspect the indexer:
 `<root-index>` is the Base64-encoded absolute input-root path used in the
 metadata records. Image and thumbnail paths are checked against their root.
 
-## Windows distribution
+## Platform distributions
 
-These commands create self-contained Windows folders and matching ZIP archives
-with a compiled Bun server and the launchers:
+These commands create self-contained folders and matching ZIP archives with a
+compiled Bun server and a launcher for each supported platform:
 
 ```bash
-npm run dist:arm64
-npm run dist:x64
-# build both architectures
+npm run dist:windows-arm64
+npm run dist:windows-x64
+npm run dist:macos-arm64
+npm run dist:macos-x64
+npm run dist:ubuntu-arm64
+npm run dist:ubuntu-x64
+# build every platform and architecture
 npm run dist:package
 ```
 
-The output is `dist-arm64/` or `dist-x64/`, with `TravelAlbums-arm64.zip` or
-`TravelAlbums-x64.zip` at the repository root. Copy the matching folder to the
-Windows computer, update its `server-config.json`, and run
-`run-arm64.cmd` or `run-x64.cmd`. `launcher.ps1` provides the Windows tray
-launcher and server controls.
+The output folder and archive names use the format
+`dist-<platform>-<architecture>/` and
+`TravelAlbums-<platform>-<architecture>.zip`. Windows bundles contain
+`server.exe`, `run-windows.cmd`, and the PowerShell tray launcher. macOS and
+Ubuntu bundles contain an executable named `server` and a native shell
+launcher (`run-macos.sh` or `run-ubuntu.sh`). Update `server-config.json` after
+extracting a bundle, then run its launcher.
 
 To run the PowerShell tray launcher directly:
 
@@ -440,40 +446,29 @@ Available endpoints:
 The output file is written incrementally, so clients should use `/status` to
 determine whether indexing has finished before consuming the complete file.
 
-### Windows distributions with Bun
+### Platform distributions with Bun
 
-The distribution scripts compile a self-contained Bun server for the target
-Windows architecture:
+The distribution scripts compile a self-contained Bun server for all supported
+platform and architecture combinations:
 
 ```bash
-npm run dist:arm64
-npm run dist:x64
-# or build both
+npm run dist:windows-arm64
+npm run dist:windows-x64
+npm run dist:macos-arm64
+npm run dist:macos-x64
+npm run dist:ubuntu-arm64
+npm run dist:ubuntu-x64
+# or build all six
 npm run dist:package
 ```
 
-Each build also creates a downloadable archive at the project root:
+Each build creates a downloadable archive at the project root. Bun target
+identifiers are `bun-windows-*`, `bun-darwin-*`, and `bun-linux-*`; Ubuntu uses
+the Linux target. Extract the archive on the matching platform, update
+`server-config.json`, and run the included launcher.
 
-- `TravelAlbums-arm64.zip`
-- `TravelAlbums-x64.zip`
-
-The archive contains the complete `dist-arm64/` or `dist-x64/` folder. Extract
-it on the matching Windows computer, update `server-config.json`, and run the
-architecture-specific `.cmd` launcher.
-
-Each command creates a complete folder that can be zipped and copied to a
-Windows computer:
-
-- `dist-arm64/` contains a Windows ARM64 `server.exe`.
-- `dist-x64/` contains a Windows x64 `server.exe`.
-
-Run the matching `run-arm64.cmd` or `run-x64.cmd` launcher from the copied
-folder. The launcher changes into its own folder before starting `server.exe`.
-The folder also contains `server-config.json`; update its input and output paths
-for the target computer.
-
-Each folder includes a compiled Bun server, so Bun and Node.js do not need to be
-installed on the target computer.
+Each folder includes a compiled Bun server, so Bun and Node.js do not need to
+be installed on the target computer.
 
 4. CLI style (Bun)
 

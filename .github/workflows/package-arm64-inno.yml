@@ -20,18 +20,18 @@ jobs:
         run: bun install
 
       - name: Build ARM64 distribution
-        run: bun run dist:arm64
+        run: bun run dist:windows-arm64
 
       - name: Verify ARM64 distribution
         shell: pwsh
         run: |
-          if (-Not (Test-Path "dist-arm64")) {
-            Write-Error "dist-arm64 folder was not created"
+          if (-Not (Test-Path "dist-windows-arm64")) {
+            Write-Error "dist-windows-arm64 folder was not created"
             exit 1
           }
 
-          Write-Host "Contents of dist-arm64:"
-          Get-ChildItem -Recurse "dist-arm64"
+          Write-Host "Contents of dist-windows-arm64:"
+          Get-ChildItem -Recurse "dist-windows-arm64"
 
       - name: Install Inno Setup
         shell: pwsh
