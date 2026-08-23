@@ -1,3 +1,9 @@
+## [1.37.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.36.0...v1.37.0) (2026-08-23)
+
+### Features
+
+* enhance release workflow with asset verification and checksum generation ([6d5fedb](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/6d5fedb96ea1d39ab1e0dc5793739f4342224f98))
+
 ## [1.36.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.35.0...v1.36.0) (2026-08-23)
 
 ### Features
