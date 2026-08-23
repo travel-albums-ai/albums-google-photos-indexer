@@ -25,8 +25,7 @@ jobs:
 
       - name: "📦 Build Ubuntu distributions"
         run: |
-          bun run dist:ubuntu-arm64
-          bun run dist:ubuntu-x64
+          bun run dist:ubuntu
 
       - name: "⬆️ Upload Ubuntu distributions"
         uses: actions/upload-artifact@v4

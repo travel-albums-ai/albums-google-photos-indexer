@@ -25,8 +25,7 @@ jobs:
 
       - name: "📦 Build Windows distributions"
         run: |
-          bun run dist:windows-arm64
-          bun run dist:windows-x64
+          bun run dist:windows
 
       - name: "⬆️ Upload Windows distributions"
         uses: actions/upload-artifact@v4
