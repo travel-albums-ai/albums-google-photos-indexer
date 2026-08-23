@@ -18,6 +18,7 @@
     "dist:x64": "bun scripts/package-node-dist.mjs x64 dist-x64",
     "dist:package": "bun run dist:arm64 && bun run dist:x64",
     "next": "semantic-release",
+    "bun:arm64": "bun build server.mjs --compile --target=bun-windows-arm64 --outfile=server-arm64.exe --minify",
     "powershell:arm64": "cd ./dist-arm64 && powershell -ExecutionPolicy Bypass -File launcher.ps1"
   },
   "main": "dist/indexer-cli.mjs",
