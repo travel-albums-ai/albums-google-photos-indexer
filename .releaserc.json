@@ -73,11 +73,11 @@
           },
           {
             "path": "TravelAlbums-macos-arm64.tar.gz",
-            "label": "[macOS] - Apple Silicon (M1/M2+)"
+            "label": "[MacOS] - Apple Silicon (M1/M2+)"
           },
           {
             "path": "TravelAlbums-macos-x64.tar.gz",
-            "label": "[macOS] - Intel x64"
+            "label": "[MacOS] - Intel x64"
           },
           {
             "path": "TravelAlbums-ubuntu-arm64.tar.gz",
