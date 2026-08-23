@@ -20,14 +20,6 @@ jobs:
         with:
           bun-version: 1.4.0
 
-      - name: "♻️ Cache Bun install cache"
-        uses: actions/cache@v4
-        with:
-          path: ~\.bun\install\cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-
       - name: "📥 Install deps"
         run: bun install --frozen-lockfile
 
