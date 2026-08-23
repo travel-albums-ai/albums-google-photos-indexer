@@ -26,26 +26,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "🟢 Setup Node"
-        uses: actions/setup-node@v4
+      - name: "🥟 Setup Bun"
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 24
-          cache: npm
+          bun-version: 1.4.0
 
       - name: "📥 Install deps"
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: "🔐 Authenticate to npm"
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: "🧰 Build"
-        run: npm run build
+        run: bun run build
 
       - name: "🪟 Build Windows distributions"
-        run: npm run dist:package
+        run: bun run dist:package
 
       - name: "🏷️ Create release (npm run next)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm run next
+        run: bun run next

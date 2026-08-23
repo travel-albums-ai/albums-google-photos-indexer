@@ -1,8 +1,70 @@
 # Albums Google Photos Indexer
 
-A Node.js CLI, library, and local REST server for indexing Google Photos
-Takeout folders. It scans one or more local roots, writes metadata as NDJSON,
-and creates thumbnails for browsing and offline analysis.
+A Node.js CLI, library, and local REST server for indexing Google Photos Takeout folders. It scans one or more local roots, writes metadata as NDJSON, and creates thumbnails for browsing and offline analysis.
+
+## TL;DR ⚡️
+- Purpose: index local Google Photos Takeout folders into NDJSON + thumbnails.
+- Quick run (non-technical): Download the ZIP built by the repository's GitHub Actions (or Releases), extract it, and run the included `runMe` launcher for your OS (Windows: `.cmd` or `.ps1`). No install or configuration required — the bundle contains the runtime and a default config.
+- Developer quick-start: `node indexer-cli.mjs --config ./examples/server-config.json` or import `start()` programmatically.
+
+## Simplicity
+This project aims to be simple for local use: a single JSON config file, a CLI, and an optional REST server. No cloud credentials are required for typical runs.
+
+## Table of Contents
+- [TL;DR](#tl-dr)
+- [Simplicity](#simplicity)
+- [For Non-Technical Users](#for-non-technical-users)
+- [For Technical Users](#for-technical-users)
+- [Architecture](#architecture)
+- [Requirements](#requirements)
+- [Configuration](#configuration)
+- [CLI](#cli)
+- [Output](#output)
+- [REST server](#rest-server)
+- [Windows distribution](#windows-distribution)
+- [Programmatic usage](#programmatic-usage)
+- [Development](#development)
+
+## For Non-Technical Users 👋
+This section is for people who just want the app to run — no coding, no Node installs, no config editing.
+
+Quick steps (Windows — easiest):
+
+1. Download the ZIP artifact produced by the repository build (check GitHub Actions artifacts or Releases).
+2. Extract the ZIP somewhere you can access (e.g., `C:\TravelAlbums`).
+3. Open the extracted folder and look for the `runMe` launcher for your platform:
+	- Windows: `*.cmd` (double-click) or `*.ps1` (PowerShell). You can also run the bundled PowerShell launcher from a terminal:
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File .\launcher.ps1
+```
+
+4. The launcher starts the service. It spawns the indexer internally and begins indexing the bundled or default configured paths.
+
+What you don't need to do:
+- No installation of Node.js or dependencies.
+- No manual editing of JSON config files (defaults in the bundle work out-of-the-box).
+- No other tools or services.
+
+Notes for Linux / macOS users: packaged bundles and simple `runMe` scripts for those platforms are available as artifacts as well — see the repository's release artifacts or the `dist-` folders. Full command-line instructions for Linux/macOS are provided in the Developer section below.
+
+#### Quick visual steps (download & run) 🧭
+
+```mermaid
+graph TD
+	A[Go to project page] --> B[Click Actions or Releases]
+	B --> C[Open Releases or Artifacts]
+	C --> D[Find ZIP for your OS / arch]
+	D --> E[Download ZIP]
+	E --> F[Extract ZIP]
+	F --> G[Run the runMe launcher for your OS]
+	G --> H[🎉 Server starts on 3001]
+```
+
+Follow those steps to get the bundled, zero-config release running in a few clicks.
+
+## For Technical Users
+The sections below provide complete technical details (architecture, programmatic API, distribution build steps, and developer notes).
 
 ## Architecture
 
