@@ -1,3 +1,9 @@
+## [1.32.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.31.0...v1.32.0) (2026-08-23)
+
+### Features
+
+* add distribution and cleanup scripts to package.json ([df744d9](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/df744d92a32ee61a6126053f9fbdea62a40b297e))
+
 ## [1.31.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.30.0...v1.31.0) (2026-08-23)
 
 ### Features
