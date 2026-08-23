@@ -1,3 +1,9 @@
+## [1.41.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.40.0...v1.41.0) (2026-08-23)
+
+### 🚀 Features
+
+* add caching for Bun install in Windows release workflow ([8c282f4](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/8c282f4c2868e7ca16c74271538760f9b4db097e))
+
 ## [1.40.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.39.0...v1.40.0) (2026-08-23)
 
 ### 🚀 Features
