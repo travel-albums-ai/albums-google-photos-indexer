@@ -65,27 +65,27 @@
         "assets": [
           {
             "path": "TravelAlbums-windows-arm64.zip",
-            "label": "Windows ARM64"
+            "label": "[Windows 10/11] - ARM64"
           },
           {
             "path": "TravelAlbums-windows-x64.zip",
-            "label": "Windows x64"
+            "label": "[Windows 10/11] - x64"
           },
           {
             "path": "TravelAlbums-macos-arm64.tar.gz",
-            "label": "macOS Apple Silicon"
+            "label": "[macOS] - Apple Silicon (M1/M2+)"
           },
           {
             "path": "TravelAlbums-macos-x64.tar.gz",
-            "label": "macOS Intel"
+            "label": "[macOS] - Intel x64"
           },
           {
             "path": "TravelAlbums-ubuntu-arm64.tar.gz",
-            "label": "Ubuntu ARM64"
+            "label": "[Ubuntu / Debian] - ARM64"
           },
           {
             "path": "TravelAlbums-ubuntu-x64.tar.gz",
-            "label": "Ubuntu x64"
+            "label": "[Ubuntu / Debian] - x64"
           },
           {
             "path": "SHA256SUMS",
