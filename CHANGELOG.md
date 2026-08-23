@@ -1,3 +1,9 @@
+## [1.28.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.27.0...v1.28.0) (2026-08-23)
+
+### Features
+
+* update server configuration and add backup file ([16458b1](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/16458b1d26352c55e2a72a3ecbf37854733f9a4e))
+
 ## [1.27.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.26.0...v1.27.0) (2026-08-23)
 
 ### Features
