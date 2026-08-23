@@ -21,7 +21,9 @@ export async function loadConfigFromArgv() {
 
 export async function loadCitiesFile(citiesFile) {
   try {
-    const raw = await readFile(citiesFile, 'utf8');
+    const raw = typeof Bun !== 'undefined'
+      ? await Bun.file(citiesFile).text()
+      : await readFile(citiesFile, 'utf8');
     const parsed = JSON.parse(raw);
     return parsed.map(({ name, lat, lng, country }) => ({ name, lat, lng, country }));
   } catch (error) {

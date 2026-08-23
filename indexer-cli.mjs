@@ -7,10 +7,11 @@ import { fileURLToPath } from 'node:url';
 import EventEmitter from 'node:events';
 import { createSemaphore } from './src/indexer/concurrency/queue.mjs';
 import { worker } from './src/indexer/concurrency/worker.mjs';
+import citiesData from './src/indexer/data/cities.json' with { type: 'json' };
 import { createOrReadThumbnail } from './src/indexer/image/thumbnails.mjs';
 import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
 import { initOutputDir } from './src/indexer/io/init-output-dir.mjs';
-import { loadCitiesFile, loadConfigFromArgv } from './src/indexer/io/load-config.mjs';
+import { loadConfigFromArgv } from './src/indexer/io/load-config.mjs';
 import { loadExisting } from './src/indexer/io/load-existing.mjs';
 import { readJsonSafe } from './src/indexer/io/read-json-safe.mjs';
 import { walkStream } from './src/indexer/io/walk-stream.mjs';
@@ -101,7 +102,7 @@ export class IndexerController {
       console.log(`[discovery] Found ${Array.from(existingSet).length} existing records. Resuming...`);
       console.log(`===============================`);
 
-      const cities = await loadCitiesFile(new URL('./src/indexer/data/cities.json', import.meta.url));
+      const cities = citiesData.map(({ name, lat, lng, country }) => ({ name, lat, lng, country }));
       const citiesGrid = buildCitiesGridCleaned(cities, 1);
 
       console.log(`[cities] Loaded ${cities.length} cities. Grid size: ${citiesGrid.size}`);
