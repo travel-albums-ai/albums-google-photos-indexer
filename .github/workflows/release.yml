@@ -63,9 +63,6 @@ jobs:
       - name: "🧰 Build"
         run: bun run build
 
-      - name: "📦 Build macOS, Ubuntu, and Windows distributions"
-        run: bun run dist:package
-
       - name: "🏷️ Create release (npm run next)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
