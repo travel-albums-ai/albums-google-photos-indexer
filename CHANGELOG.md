@@ -1,3 +1,9 @@
+## [1.27.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.26.0...v1.27.0) (2026-08-23)
+
+### Features
+
+* add Bun build script for Windows ARM64 and update TARGET_ROOT path in server config ([63da0f1](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/63da0f15fde72fdb0c5cdd66380f482c9370da45))
+
 ## [1.26.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.25.0...v1.26.0) (2026-08-23)
 
 ### Features
