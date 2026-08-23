@@ -161,7 +161,10 @@ export function stop() {
 
 export default start;
 
-if (process.argv[1] === fileURLToPath(import.meta.url) && !globalThis.__INDEXER_IMPORTED_IN_SERVER__) {
+if (
+  path.basename(process.argv[1] ?? '') === path.basename(fileURLToPath(import.meta.url))
+  && !globalThis.__INDEXER_IMPORTED_IN_SERVER__
+) {
   (async () => {
     try {
       _CURRENT_DONE = start();
