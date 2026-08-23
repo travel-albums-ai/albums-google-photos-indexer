@@ -1,3 +1,9 @@
+## [1.29.2](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.29.1...v1.29.2) (2026-08-23)
+
+### Bug Fixes
+
+* update TARGET_ROOT in server-config.json and improve default config path handling in load-config.mjs ([e00337e](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/e00337e4b8621ae09a5e6586bec68989b38e34ca))
+
 ## [1.29.1](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.29.0...v1.29.1) (2026-08-23)
 
 ### Bug Fixes
