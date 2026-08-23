@@ -1,3 +1,9 @@
+## [1.46.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.45.0...v1.46.0) (2026-08-23)
+
+### 🚀 Features
+
+* update packaging scripts and add example configuration files for Windows and macOS ([22cedd1](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/22cedd13abf9eb7b123e6a5159a86b4cfb178e37))
+
 ## [1.45.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.44.0...v1.45.0) (2026-08-23)
 
 ### 🚀 Features
