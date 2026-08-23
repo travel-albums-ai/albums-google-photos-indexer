@@ -47,8 +47,8 @@ jobs:
         with:
           bun-version: 1.4.0
 
-      - name: "📥 Install deps"
-        run: bun install
+      - name: "📥 Install locked dependencies"
+        run: bun install --frozen-lockfile
 
       - name: "📦 Collect platform distributions"
         uses: actions/download-artifact@v4
@@ -57,13 +57,39 @@ jobs:
           merge-multiple: true
           path: .
 
-      - name: "🔐 Authenticate to npm"
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - name: "🔎 Verify release assets"
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected_assets=(
+            TravelAlbums-windows-arm64.zip
+            TravelAlbums-windows-x64.zip
+            TravelAlbums-macos-arm64.tar.gz
+            TravelAlbums-macos-x64.tar.gz
+            TravelAlbums-ubuntu-arm64.tar.gz
+            TravelAlbums-ubuntu-x64.tar.gz
+          )
+          for asset in "${expected_assets[@]}"; do
+            test -f "$asset"
+          done
 
-      - name: "🧰 Build"
+      - name: "🔏 Generate SHA256 checksums"
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum \
+            TravelAlbums-windows-arm64.zip \
+            TravelAlbums-windows-x64.zip \
+            TravelAlbums-macos-arm64.tar.gz \
+            TravelAlbums-macos-x64.tar.gz \
+            TravelAlbums-ubuntu-arm64.tar.gz \
+            TravelAlbums-ubuntu-x64.tar.gz \
+            > SHA256SUMS
+
+      - name: "🧰 Build npm package"
         run: bun run build
 
-      - name: "🏷️ Create release (npm run next)"
+      - name: "🏷️ Publish npm package and GitHub release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
