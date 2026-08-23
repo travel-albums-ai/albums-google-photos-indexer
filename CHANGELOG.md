@@ -1,3 +1,9 @@
+## [1.33.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.32.0...v1.33.0) (2026-08-23)
+
+### Features
+
+* load cities data directly from JSON import and refactor loading logic ([06129ef](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/06129ef7e5b3cd6f84c1d65c7a1ba7cebf1efe7c))
+
 ## [1.32.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.31.0...v1.32.0) (2026-08-23)
 
 ### Features
