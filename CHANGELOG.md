@@ -1,3 +1,9 @@
+## [1.34.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.33.0...v1.34.0) (2026-08-23)
+
+### Features
+
+* enhance indexer CLI entrypoint handling and update build scripts ([86bec69](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/86bec6989dd813fa3783ad93c5e54902ad967362))
+
 ## [1.33.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.32.0...v1.33.0) (2026-08-23)
 
 ### Features
