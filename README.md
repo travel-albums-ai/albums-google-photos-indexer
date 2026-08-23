@@ -228,10 +228,29 @@ Ubuntu bundles contain an executable named `server` and a native shell
 launcher (`run-macos.sh` or `run-ubuntu.sh`). Update `server-config.json` after
 extracting a bundle, then run its launcher.
 
-macOS builds produced by this cross-platform script are unsigned. A release
-intended for end users must be code-signed and notarized with Apple before
-distribution; otherwise Gatekeeper may report the downloaded executable as
-damaged or from an unidentified developer.
+macOS builds produced by this cross-platform script are unsigned unless
+`MACOS_CODESIGN_IDENTITY` is set. A release intended for end users must be
+built on macOS, code-signed with a Developer ID certificate, and notarized
+with Apple before distribution; otherwise Gatekeeper may report the downloaded
+executable as damaged or from an unidentified developer. For example:
+
+```bash
+MACOS_CODESIGN_IDENTITY="Developer ID Application: Example, Inc. (TEAMID)" \
+	npm run dist:macos-arm64
+codesign --verify --verbose=2 dist-macos-arm64/server
+```
+
+Notarize the resulting archive with `notarytool` and staple the ticket using
+Apple's release tooling. For a locally downloaded unsigned build, confirm
+that Gatekeeper quarantine is the cause with:
+
+```bash
+xattr -dr com.apple.quarantine dist-macos-arm64
+./dist-macos-arm64/run-macos.sh
+```
+
+Only remove quarantine for binaries you trust; this is a diagnostic/workaround,
+not a substitute for signing and notarization.
 
 To run the PowerShell tray launcher directly:
 

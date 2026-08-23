@@ -53,6 +53,22 @@ execFileSync('bun', [
   '--minify',
 ], { cwd: projectDir, stdio: 'inherit' });
 
+const signingIdentity = process.env.MACOS_CODESIGN_IDENTITY;
+if (platform === 'macos' && signingIdentity) {
+  if (process.platform !== 'darwin') {
+    throw new Error('MACOS_CODESIGN_IDENTITY requires running the macOS build on macOS');
+  }
+  execFileSync('codesign', [
+    '--force',
+    '--options',
+    'runtime',
+    '--timestamp',
+    '--sign',
+    signingIdentity,
+    executablePath,
+  ], { cwd: projectDir, stdio: 'inherit' });
+}
+
 await fs.copyFile(path.join(projectDir, target.config), path.join(outputDir, 'server-config.json'));
 await fs.copyFile(path.join(projectDir, 'README.md'), path.join(outputDir, 'README.md'));
 for (const launcher of target.launchers) {
