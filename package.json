@@ -21,7 +21,10 @@
     "dist:ubuntu-arm64": "bun scripts/package-bun-dist.mjs ubuntu arm64",
     "dist:ubuntu-x64": "bun scripts/package-bun-dist.mjs ubuntu x64",
     "dist:package": "bun run dist:windows-arm64 && bun run dist:windows-x64 && bun run dist:macos-arm64 && bun run dist:macos-x64 && bun run dist:ubuntu-arm64 && bun run dist:ubuntu-x64",
+    "distribute": "bun run build && bun run dist:package",
     "next": "semantic-release",
+    "delete:archives": "rm -f TravelAlbums-windows-* TravelAlbums-macos-* TravelAlbums-ubuntu-*",
+    "delete": "bun run delete:archives && rm -rf dist-windows-* dist-macos-* dist-ubuntu-* dist",
     "powershell:arm64": "cd ./dist-windows-arm64 && powershell -ExecutionPolicy Bypass -File launcher.ps1"
   },
   "main": "dist/indexer-cli.mjs",
