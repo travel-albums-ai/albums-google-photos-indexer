@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 
 export function configPathFromArgv(argv = process.argv) {
   const idx = argv.indexOf('--config');
-  return idx !== -1 && argv[idx + 1] ? argv[idx + 1] : null;
+  return idx !== -1 && argv[idx + 1] ? argv[idx + 1] : 'server-config.json';
 }
 
 export async function loadConfigFromArgv() {

@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "prestart": "bun run build",
-    "start": "bun dist/server.mjs --config server-config.json",
+    "start": "bun dist/server.mjs",
     "start:win": "bun dist/server.mjs --config server-config-win.json",
     "indexer": "time bun indexer-cli.mjs --config server-config.json",
     "test:programmatic": "bun ./test/programmatic-test.mjs",
-    "build": "bun x esbuild server.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/server.mjs --minify --sourcemap --define:globalThis.__INDEXER_IMPORTED_IN_SERVER__=true && bun x esbuild indexer-cli.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/indexer-cli.mjs --minify --sourcemap && mkdir -p dist/src/indexer/data && cp -r src/indexer/data/* dist/src/indexer/data/",
+    "build": "bun x esbuild server.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/server.mjs --minify --define:globalThis.__INDEXER_IMPORTED_IN_SERVER__=true && bun x esbuild indexer-cli.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/indexer-cli.mjs --minify && mkdir -p dist/src/indexer/data && cp -r src/indexer/data/* dist/src/indexer/data/",
     "pack": "bun pm pack",
     "prepack": "bun run build",
     "prepublishOnly": "bun run build",
