@@ -45,6 +45,12 @@
               "section": "🤖 CI/CD"
             }
           ]
+        },
+        "writerOpts": {
+          "commitsSort": [
+            "scope",
+            "subject"
+          ]
         }
       }
     ],
@@ -57,14 +63,34 @@
       "@semantic-release/github",
       {
         "assets": [
-          "dist/**",
-          "TravelAlbums-windows-arm64.zip",
-          "TravelAlbums-windows-x64.zip",
-          "TravelAlbums-macos-arm64.tar.gz",
-          "TravelAlbums-macos-x64.tar.gz",
-          "TravelAlbums-ubuntu-arm64.tar.gz",
-          "TravelAlbums-ubuntu-x64.tar.gz",
-          "SHA256SUMS"
+          {
+            "path": "TravelAlbums-windows-arm64.zip",
+            "label": "🪟 Windows ARM64"
+          },
+          {
+            "path": "TravelAlbums-windows-x64.zip",
+            "label": "🪟 Windows x64"
+          },
+          {
+            "path": "TravelAlbums-macos-arm64.tar.gz",
+            "label": "🍎 macOS Apple Silicon"
+          },
+          {
+            "path": "TravelAlbums-macos-x64.tar.gz",
+            "label": "🍎 macOS Intel"
+          },
+          {
+            "path": "TravelAlbums-ubuntu-arm64.tar.gz",
+            "label": "🐧 Ubuntu ARM64"
+          },
+          {
+            "path": "TravelAlbums-ubuntu-x64.tar.gz",
+            "label": "🐧 Ubuntu x64"
+          },
+          {
+            "path": "SHA256SUMS",
+            "label": "🔐 SHA-256 Checksums"
+          }
         ]
       }
     ],
