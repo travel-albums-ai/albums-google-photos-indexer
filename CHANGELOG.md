@@ -1,3 +1,9 @@
+## [1.42.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.41.0...v1.42.0) (2026-08-23)
+
+### 🚀 Features
+
+* add caching for Bun install in macOS and Ubuntu release workflows ([1704322](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/1704322726c343b2a1c6a658425ec0cdac1273d5))
+
 ## [1.41.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.40.0...v1.41.0) (2026-08-23)
 
 ### 🚀 Features
