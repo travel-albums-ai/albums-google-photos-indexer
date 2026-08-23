@@ -595,3 +595,10 @@ npm run
 # run linter (if configured)
 npm run lint
 ```
+
+
+## Copyright
+
+Data embedded into the website for cities detection and naming for GPS coordinates comes from here:
+
+[Cities JSON](https://github.com/lutangar/cities.json)
