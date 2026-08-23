@@ -1,3 +1,9 @@
+## [1.26.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.25.0...v1.26.0) (2026-08-23)
+
+### Features
+
+* moving to Bun 1.4 ([87a0fc2](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/87a0fc2ff56c49bcafb645212f5035b52897e1c9))
+
 ## [1.25.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.24.0...v1.25.0) (2026-08-18)
 
 ### Features
