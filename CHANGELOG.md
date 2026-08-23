@@ -1,3 +1,13 @@
+## [1.45.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.44.0...v1.45.0) (2026-08-23)
+
+### 🚀 Features
+
+* add caching for Bun install in Windows release workflow and update asset labels for clarity ([f66bb78](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/f66bb78513983441f849fc05353c66177ab8b752))
+
+### 🐛 Bug Fixes
+
+* standardize macOS label casing in release assets ([2f8b43b](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/2f8b43b7185ca597a711f4be482c75cfc81212f6))
+
 ## [1.44.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.43.0...v1.44.0) (2026-08-23)
 
 ### 🚀 Features
