@@ -1,3 +1,9 @@
+## [1.29.1](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.29.0...v1.29.1) (2026-08-23)
+
+### Bug Fixes
+
+* update TARGET_ROOT in server-config.json and improve condition check in indexer-cli.mjs ([34691ef](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/34691ef778411e2e674234e1ebdf56b6d427c22a))
+
 ## [1.29.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.28.0...v1.29.0) (2026-08-23)
 
 ### Features
