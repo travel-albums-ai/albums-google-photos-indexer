@@ -1,0 +1,4 @@
+{
+  "TAKEOUT_ROOTS": ["/var/GoogleTakeout"],
+  "TARGET_ROOT": "/var/TakeoutCache"
+}

@@ -1,5 +1,7 @@
 # Albums Google Photos Indexer
 
+[![🚀 Release](https://github.com/travel-albums-ai/albums-google-photos-indexer/actions/workflows/release.yml/badge.svg)](https://github.com/travel-albums-ai/albums-google-photos-indexer/actions/workflows/release.yml)
+
 A Node.js CLI, library, and local REST server for indexing Google Photos Takeout folders. It scans one or more local roots, writes metadata as NDJSON, and creates thumbnails for browsing and offline analysis.
 
 ## TL;DR ⚡️

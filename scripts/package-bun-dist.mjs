@@ -8,19 +8,19 @@ import { fileURLToPath } from 'node:url';
 const [, , platform, architecture] = process.argv;
 const targets = {
   windows: {
-    config: 'server-config-win.json',
+    config: 'server-config.example-win.json',
     executable: 'server.exe',
-    launchers: ['run-windows.cmd', 'launcher.ps1'],
+    launchers: ['run-windows.cmd'],
     targets: { arm64: 'bun-windows-arm64', x64: 'bun-windows-x64' },
   },
   macos: {
-    config: 'server-config.default.json',
+    config: 'server-config.example.json',
     executable: 'server',
     launchers: ['run-macos.sh'],
     targets: { arm64: 'bun-darwin-arm64', x64: 'bun-darwin-x64' },
   },
   ubuntu: {
-    config: 'server-config.default.json',
+    config: 'server-config.example.json',
     executable: 'server',
     launchers: ['run-ubuntu.sh'],
     targets: { arm64: 'bun-linux-arm64', x64: 'bun-linux-x64' },
@@ -71,19 +71,19 @@ if (platform === 'macos' && signingIdentity) {
 
 await fs.copyFile(path.join(projectDir, target.config), path.join(outputDir, 'server-config.json'));
 await fs.copyFile(path.join(projectDir, 'README.md'), path.join(outputDir, 'README.md'));
-for (const launcher of target.launchers) {
-  await fs.copyFile(path.join(projectDir, launcher), path.join(outputDir, launcher));
-}
+// for (const launcher of target.launchers) {
+//   await fs.copyFile(path.join(projectDir, launcher), path.join(outputDir, launcher));
+// }
 
-if (platform === 'windows') {
-  await fs.copyFile(path.join(projectDir, 'logo.ico'), path.join(outputDir, 'logo.ico'));
-}
+// if (platform === 'windows') {
+//   await fs.copyFile(path.join(projectDir, 'logo.ico'), path.join(outputDir, 'logo.ico'));
+// }
 
-for (const launcher of target.launchers) {
-  if (launcher.endsWith('.sh')) {
-    await fs.chmod(path.join(outputDir, launcher), 0o755);
-  }
-}
+// for (const launcher of target.launchers) {
+//   if (launcher.endsWith('.sh')) {
+//     await fs.chmod(path.join(outputDir, launcher), 0o755);
+//   }
+// }
 
 await fs.rm(archivePath, { force: true });
 if (platform === 'windows' && process.platform === 'win32') {
