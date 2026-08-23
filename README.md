@@ -219,13 +219,19 @@ npm run dist:ubuntu-x64
 npm run dist:package
 ```
 
-The output folder and archive names use the format
-`dist-<platform>-<architecture>/` and
-`TravelAlbums-<platform>-<architecture>.zip`. Windows bundles contain
+The output folder name uses the format `dist-<platform>-<architecture>/`.
+Windows archives are named `TravelAlbums-<platform>-<architecture>.zip`;
+macOS and Ubuntu archives use `TravelAlbums-<platform>-<architecture>.tar.gz`
+to preserve executable permissions. Windows bundles contain
 `server.exe`, `run-windows.cmd`, and the PowerShell tray launcher. macOS and
 Ubuntu bundles contain an executable named `server` and a native shell
 launcher (`run-macos.sh` or `run-ubuntu.sh`). Update `server-config.json` after
 extracting a bundle, then run its launcher.
+
+macOS builds produced by this cross-platform script are unsigned. A release
+intended for end users must be code-signed and notarized with Apple before
+distribution; otherwise Gatekeeper may report the downloaded executable as
+damaged or from an unidentified developer.
 
 To run the PowerShell tray launcher directly:
 

@@ -152,6 +152,10 @@ vite.config.ts.timestamp-*
 .test-output/metadata.json
 TravelAlbums-windows-arm64.zip
 TravelAlbums-windows-x64.zip
+TravelAlbums-macos-arm64.tar.gz
+TravelAlbums-macos-x64.tar.gz
+TravelAlbums-ubuntu-arm64.tar.gz
+TravelAlbums-ubuntu-x64.tar.gz
 TravelAlbums-macos-arm64.zip
 TravelAlbums-macos-x64.zip
 TravelAlbums-ubuntu-arm64.zip

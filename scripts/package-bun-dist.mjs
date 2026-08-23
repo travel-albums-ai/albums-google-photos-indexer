@@ -35,7 +35,8 @@ if (!targets[platform].targets[architecture]) {
 const target = targets[platform];
 const projectDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outputDir = path.resolve(`dist-${platform}-${architecture}`);
-const zipPath = path.join(projectDir, `TravelAlbums-${platform}-${architecture}.zip`);
+const archiveExtension = platform === 'windows' ? '.zip' : '.tar.gz';
+const archivePath = path.join(projectDir, `TravelAlbums-${platform}-${architecture}${archiveExtension}`);
 const executablePath = path.join(outputDir, target.executable);
 
 await fs.rm(outputDir, { recursive: true, force: true });
@@ -66,18 +67,23 @@ for (const launcher of target.launchers) {
   }
 }
 
-await fs.rm(zipPath, { force: true });
-if (process.platform === 'win32') {
+await fs.rm(archivePath, { force: true });
+if (platform === 'windows' && process.platform === 'win32') {
   execFileSync('powershell', [
     '-NoProfile',
     '-Command',
-    `Compress-Archive -Force -Path "${path.basename(outputDir)}\\*" -DestinationPath "${zipPath}"`,
+    `Compress-Archive -Force -Path "${path.basename(outputDir)}\\*" -DestinationPath "${archivePath}"`,
   ], { cwd: path.dirname(outputDir), stdio: 'inherit', shell: true });
-} else {
-  execFileSync('zip', ['-qr', zipPath, path.basename(outputDir)], {
+} else if (platform === 'windows') {
+  execFileSync('zip', ['-qr', archivePath, path.basename(outputDir)], {
     cwd: path.dirname(outputDir),
+    stdio: 'inherit',
+  });
+} else {
+  execFileSync('tar', ['-czf', archivePath, '-C', path.dirname(outputDir), path.basename(outputDir)], {
+    cwd: projectDir,
     stdio: 'inherit',
   });
 }
 
-console.log(`Created ${outputDir} and ${zipPath}`);
+console.log(`Created ${outputDir} and ${archivePath}`);
