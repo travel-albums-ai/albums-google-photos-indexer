@@ -1,3 +1,9 @@
+## [1.40.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.39.0...v1.40.0) (2026-08-23)
+
+### 🚀 Features
+
+* enhance release configuration with detailed release rules and asset definitions ([cb0bc2b](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/cb0bc2bcc0bfee72acd088c6a18360483b1fb04a))
+
 ## [1.39.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.38.0...v1.39.0) (2026-08-23)
 
 ### 🚀 Features
