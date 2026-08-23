@@ -1,3 +1,9 @@
+## [1.31.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.30.0...v1.31.0) (2026-08-23)
+
+### Features
+
+* update archive formats for macOS and Ubuntu, improve packaging script ([cb621f7](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/cb621f7c80d0555466cfc445616fc0a314b6c8fd))
+
 ## [1.30.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.29.2...v1.30.0) (2026-08-23)
 
 ### Features
