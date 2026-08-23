@@ -1,3 +1,9 @@
+## [1.30.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.29.2...v1.30.0) (2026-08-23)
+
+### Features
+
+* update distribution scripts and configurations for multi-platform support ([66a7833](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/66a7833b8daa7e546718e7e926259e57aecd6978))
+
 ## [1.29.2](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.29.1...v1.29.2) (2026-08-23)
 
 ### Bug Fixes
