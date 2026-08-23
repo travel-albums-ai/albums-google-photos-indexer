@@ -1,3 +1,9 @@
+## [1.44.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.43.0...v1.44.0) (2026-08-23)
+
+### 🚀 Features
+
+* simplify labels in release configuration for clarity ([d6a0c66](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/d6a0c665b52c4d671cbb1c12dbb471541b7ae01a))
+
 ## [1.43.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.42.0...v1.43.0) (2026-08-23)
 
 ### 🚀 Features
