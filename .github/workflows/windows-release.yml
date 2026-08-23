@@ -1,0 +1,36 @@
+name: "🪟 Windows Release"
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: "📦 Build Windows distributions"
+    runs-on: windows-latest
+
+    steps:
+      - name: "🧾 Checkout"
+        uses: actions/checkout@v4
+
+      - name: "🥟 Setup Bun"
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: "📥 Install deps"
+        run: bun install --frozen-lockfile
+
+      - name: "📦 Build Windows distributions"
+        run: |
+          bun run dist:windows-arm64
+          bun run dist:windows-x64
+
+      - name: "⬆️ Upload Windows distributions"
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-distributions
+          path: TravelAlbums-windows-*.zip
+          if-no-files-found: error

@@ -1,0 +1,36 @@
+name: "🐧 Ubuntu Release"
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: "📦 Build Ubuntu distributions"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "🧾 Checkout"
+        uses: actions/checkout@v4
+
+      - name: "🥟 Setup Bun"
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: "📥 Install deps"
+        run: bun install --frozen-lockfile
+
+      - name: "📦 Build Ubuntu distributions"
+        run: |
+          bun run dist:ubuntu-arm64
+          bun run dist:ubuntu-x64
+
+      - name: "⬆️ Upload Ubuntu distributions"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntu-distributions
+          path: TravelAlbums-ubuntu-*.tar.gz
+          if-no-files-found: error

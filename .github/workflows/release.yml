@@ -16,8 +16,24 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  windows-release:
+    name: "🪟 Windows distributions"
+    uses: ./.github/workflows/windows-release.yml
+
+  macos-release:
+    name: "🍎 macOS distributions"
+    uses: ./.github/workflows/macos-release.yml
+
+  ubuntu-release:
+    name: "🐧 Ubuntu distributions"
+    uses: ./.github/workflows/ubuntu-release.yml
+
   release:
     name: "📦 Semantic Release"
+    needs:
+      - windows-release
+      - macos-release
+      - ubuntu-release
     runs-on: ubuntu-latest
 
     steps:
@@ -33,6 +49,13 @@ jobs:
 
       - name: "📥 Install deps"
         run: bun install
+
+      - name: "📦 Collect platform distributions"
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*-distributions"
+          merge-multiple: true
+          path: .
 
       - name: "🔐 Authenticate to npm"
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
