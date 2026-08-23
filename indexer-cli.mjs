@@ -12,7 +12,6 @@ import { CACHE_FOLDER, OUT_FILE } from './src/indexer/indexer.mjs';
 import { initOutputDir } from './src/indexer/io/init-output-dir.mjs';
 import { loadCitiesFile, loadConfigFromArgv } from './src/indexer/io/load-config.mjs';
 import { loadExisting } from './src/indexer/io/load-existing.mjs';
-import sharp from './src/indexer/io/load-sharp.mjs';
 import { readJsonSafe } from './src/indexer/io/read-json-safe.mjs';
 import { walkStream } from './src/indexer/io/walk-stream.mjs';
 import { createProgress } from './src/indexer/progress/progress.mjs';
@@ -22,8 +21,8 @@ import { buildCitiesGridCleaned } from './src/indexer/utils/build-cities-grid.mj
 const MODE = 'ssd';
 
 const CONFIG = {
-  hdd: { concurrency: 3, sharp: 4, cache: false },
-  ssd: { concurrency: 16, sharp: 16, cache: false },
+  hdd: { concurrency: 3, imageConcurrency: 4 },
+  ssd: { concurrency: 16, imageConcurrency: 16 },
 };
 
 const getConfig = () =>
@@ -37,9 +36,6 @@ const getConfig = () =>
 
 const ACTIVE_CONFIG = getConfig();
 const CONCURRENCY = ACTIVE_CONFIG.concurrency;
-
-sharp.cache(ACTIVE_CONFIG.cache);
-sharp.concurrency(ACTIVE_CONFIG.sharp);
 
 let _CURRENT_CONTROLLER = null;
 let _CURRENT_DONE = null;
@@ -89,7 +85,7 @@ export class IndexerController {
       console.log(`Scanning roots: ${resolvedRoots.join(', ')}`);
       console.log(`Mode: ${MODE}`);
       console.log(`Concurrency: ${CONCURRENCY}`);
-      console.log(`Sharp: ${ACTIVE_CONFIG.sharp}`);
+      console.log(`Image concurrency: ${ACTIVE_CONFIG.imageConcurrency}`);
       console.log(`Output: ${OUT_DIR}`);
       console.log(`Output Thumbnails: ${OUT_DIR}/${CACHE_FOLDER}`);
       console.log(`Output JSON: ${OUT_DIR}/${OUT_FILE}`);
@@ -111,15 +107,15 @@ export class IndexerController {
       console.log(`[cities] Loaded ${cities.length} cities. Grid size: ${citiesGrid.size}`);
       console.log(`===============================`);
 
-      // create a transform semaphore sized to the sharp concurrency to bound in-flight image transforms
-      const transformPool = createSemaphore(ACTIVE_CONFIG.sharp);
+      // Bound in-flight native image transforms separately from filesystem workers.
+      const transformPool = createSemaphore(ACTIVE_CONFIG.imageConcurrency);
 
       try {
         for (const ROOT of resolvedRoots) {
           if (signal.aborted) break;
           console.log(`\n[discovery] Scanning: ${ROOT}`);
 
-          const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, sharp, ROOT };
+          const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, ROOT };
           const depsWithPool = { ...deps, transformPool };
           const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
 

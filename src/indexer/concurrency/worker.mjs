@@ -19,7 +19,7 @@ function safeDecode(input) {
 const IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.tif', '.tiff', '.heic', '.heif']);
 
 export async function worker(queue, emit, citiesGrid, deps) {
-  const { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir, sharp, ROOT, transformPool } = deps;
+  const { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir, ROOT, transformPool } = deps;
   const base64Root = Buffer.from(ROOT).toString('base64')
 
   while (true) {
@@ -62,12 +62,12 @@ export async function worker(queue, emit, citiesGrid, deps) {
         if (transformPool) {
           await transformPool.acquire();
           try {
-            ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath, base64Root));
+            ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, rootIndex, relPath, base64Root));
           } finally {
             transformPool.release();
           }
         } else {
-          ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, sharp, rootIndex, relPath, base64Root));
+          ({ width, height } = await createOrReadThumbnail(outDir, folder, filename, folderName, rootIndex, relPath, base64Root));
         }
       } else {
         // Non-image media: log it and continue without thumbnail creation

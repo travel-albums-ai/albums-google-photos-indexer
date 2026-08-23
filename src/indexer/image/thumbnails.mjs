@@ -2,11 +2,8 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { CACHE_FOLDER } from '../indexer.mjs';
 
-export async function getSizesAndCreatePreview(inputPath, sharp) {
-  const metadata = await sharp(inputPath, {
-    sequentialRead: true,
-    limitInputPixels: false,
-  }).metadata();
+export async function getSizesAndCreatePreview(inputPath) {
+  const metadata = await new Bun.Image(inputPath).metadata();
 
   return {
     width: metadata.width,
@@ -17,27 +14,17 @@ export async function getSizesAndCreatePreview(inputPath, sharp) {
 export async function createThumbnailAndPreview(
   inputPath,
   outputPath,
-  sharp
 ) {
-  return await sharp(inputPath, {
-    limitInputPixels: false,
-    sequentialRead: true,
-    failOn: 'none',
-  })
-    .resize({
-      width: 550,
+  const image = new Bun.Image(inputPath, { autoOrient: true })
+    .resize(550, 550, {
       fit: 'inside',
       withoutEnlargement: true,
-      kernel: sharp.kernel.linear,
-      fastShrinkOnLoad: true,
+      filter: 'linear',
     })
-    .rotate()
-    .withMetadata()
-    .jpeg({
-      quality: 70,
-      mozjpeg: false,
-    })
-    .toFile(outputPath);
+    .jpeg({ quality: 70 });
+
+  await image.write(outputPath);
+  return { width: image.width, height: image.height };
 }
 
 export async function createOrReadThumbnail(
@@ -45,7 +32,6 @@ export async function createOrReadThumbnail(
   folder,
   fileName,
   folderName,
-  sharp,
   rootIndex = 'root',
   relPath = '',
   base64Root,
@@ -64,8 +50,8 @@ export async function createOrReadThumbnail(
 
   try {
     await fsp.access(thumbPath);
-    return getSizesAndCreatePreview(thumbPath, sharp);
+    return getSizesAndCreatePreview(thumbPath);
   } catch (err) {
-    return createThumbnailAndPreview(path.join(folder, fileName), thumbPath, sharp);
+    return createThumbnailAndPreview(path.join(folder, fileName), thumbPath);
   }
 }

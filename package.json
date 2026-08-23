@@ -5,17 +5,17 @@
   "type": "module",
   "scripts": {
     "prestart": "bun run build",
-    "start": "node dist/server.mjs --config server-config.json",
-    "start:win": "node dist/server.mjs --config server-config-win.json",
-    "indexer": "time node indexer-cli.mjs --config server-config.json",
-    "test:programmatic": "node ./test/programmatic-test.mjs",
-    "build": "bun x esbuild server.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/server.mjs --minify --sourcemap --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url); globalThis.__INDEXER_IMPORTED_IN_SERVER__ = true;\" && bun x esbuild indexer-cli.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/indexer-cli.mjs --minify --sourcemap --external:sharp && mkdir -p dist/src/indexer/data && cp -r src/indexer/data/* dist/src/indexer/data/",
+    "start": "bun dist/server.mjs --config server-config.json",
+    "start:win": "bun dist/server.mjs --config server-config-win.json",
+    "indexer": "time bun indexer-cli.mjs --config server-config.json",
+    "test:programmatic": "bun ./test/programmatic-test.mjs",
+    "build": "bun x esbuild server.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/server.mjs --minify --sourcemap && bun x esbuild indexer-cli.mjs --bundle --platform=node --format=esm --target=node18 --outfile=dist/indexer-cli.mjs --minify --sourcemap && mkdir -p dist/src/indexer/data && cp -r src/indexer/data/* dist/src/indexer/data/",
     "pack": "bun pm pack",
     "prepack": "bun run build",
     "prepublishOnly": "bun run build",
     "ship": "bun run pack && npm publish --access public",
-    "dist:arm64": "bun scripts/package-node-dist.mjs arm64 dist-arm64",
-    "dist:x64": "bun scripts/package-node-dist.mjs x64 dist-x64",
+    "dist:arm64": "bun scripts/package-bun-dist.mjs arm64 dist-arm64",
+    "dist:x64": "bun scripts/package-bun-dist.mjs x64 dist-x64",
     "dist:package": "bun run dist:arm64 && bun run dist:x64",
     "next": "semantic-release",
     "bun:arm64": "bun build server.mjs --compile --target=bun-windows-arm64 --outfile=server-arm64.exe --minify",
@@ -62,7 +62,7 @@
     "ndjson"
   ],
   "engines": {
-    "node": ">=18"
+    "bun": ">=1.4.0"
   },
   "publishConfig": {
     "access": "public"
@@ -71,12 +71,8 @@
     "compression": "^1.8.1",
     "driver.js": "^1.8.0",
     "express": "^5.1.0",
-    "p-limit": "^7.3.1",
-    "sharp": "^0.35.3"
+    "p-limit": "^7.3.1"
   },
-  "bundledDependencies": [
-    "sharp"
-  ],
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
@@ -90,7 +86,5 @@
     "globals": "^17.8.0",
     "semantic-release": "^24.2.9"
   },
-  "bundleDependencies": [
-    "sharp"
-  ]
+  "bundleDependencies": []
 }

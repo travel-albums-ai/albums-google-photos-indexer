@@ -5,14 +5,14 @@ $baseUrl = "http://localhost:3001"
 $githubUrl = "https://github.com/travel-albums-ai"
 $deployedUrl = "https://web-app-travel-albums.vercel.app/#/allPhotos"
 
-$script:node = $null
+$script:server = $null
 
 # ------------------------------------------------------------
 # Server process
 # ------------------------------------------------------------
 
 function Test-ServerProcess {
-    return $script:node -and !$script:node.HasExited
+    return $script:server -and !$script:server.HasExited
 }
 
 function Start-Server {
@@ -20,9 +20,9 @@ function Start-Server {
         return
     }
 
-    $script:node = Start-Process `
-        -FilePath "$root\node.exe" `
-        -ArgumentList "server.mjs --config server-config.json" `
+    $script:server = Start-Process `
+        -FilePath "$root\server.exe" `
+        -ArgumentList "--config server-config.json" `
         -WorkingDirectory $root `
         -PassThru
 }

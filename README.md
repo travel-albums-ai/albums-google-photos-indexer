@@ -100,13 +100,13 @@ graph LR
     ORCH --> CITIES
 ```
 
-The server and CLI run the indexer in the same Node.js process. The scanner
+The server and CLI run the indexer in the same Bun process. The scanner
 walks local files, workers process image records, and the output stream appends
 one JSON record per line to `metadata.json`.
 
 ## Requirements
 
-- Node.js 18 or newer
+- Bun 1.4.0 or newer
 - A local Google Photos Takeout directory, or another local directory tree
   containing supported image files
 
@@ -116,7 +116,7 @@ Install dependencies from the repository:
 npm install
 ```
 
-The package is ESM-only. It bundles `sharp` for image processing and exposes a
+The package is ESM-only. It uses Bun's native `Bun.Image` API for image processing and exposes a
 CLI binary named `indexer` when installed as a dependency.
 
 ## Configuration
@@ -206,8 +206,7 @@ metadata records. Image and thumbnail paths are checked against their root.
 ## Windows distribution
 
 These commands create self-contained Windows folders and matching ZIP archives
-with Node.js, the server, the launchers, and platform-specific `sharp`
-dependencies:
+with a compiled Bun server and the launchers:
 
 ```bash
 npm run dist:arm64
@@ -416,14 +415,12 @@ PORT=8080 npm start
 node server.mjs --config ./examples/server-config.json
 ```
 
-The server controls the indexer in the same Node.js process. It does not spawn a
+The server controls the indexer in the same Bun process. It does not spawn a
 separate indexer process. Configuration is loaded from the file passed with
 `--config`, and the server listens on `PORT` or port `3001` by default.
 
 `npm start` builds `dist/server.mjs` before launching it. The server bundle
-contains Express, the indexer, and sharp's JavaScript layer in one artifact.
-Sharp's current-platform native packages remain bundled with the npm package so
-the native image processing bindings are available at runtime.
+contains Express, the indexer, and the native Bun image pipeline in one artifact.
 
 Available endpoints:
 
@@ -443,10 +440,10 @@ Available endpoints:
 The output file is written incrementally, so clients should use `/status` to
 determine whether indexing has finished before consuming the complete file.
 
-### Windows distributions with Node.js
+### Windows distributions with Bun
 
-The distribution scripts package a matching Windows Node.js runtime, the
-server source, and sharp's native Windows dependency tree:
+The distribution scripts compile a self-contained Bun server for the target
+Windows architecture:
 
 ```bash
 npm run dist:arm64
@@ -467,26 +464,22 @@ architecture-specific `.cmd` launcher.
 Each command creates a complete folder that can be zipped and copied to a
 Windows computer:
 
-- `dist-arm64/` contains `TravelAlbums-arm64.exe` and Windows ARM64 sharp
-	dependencies.
-- `dist-x64/` contains `TravelAlbums-win32.exe` and Windows x64 sharp
-	dependencies.
+- `dist-arm64/` contains a Windows ARM64 `server.exe`.
+- `dist-x64/` contains a Windows x64 `server.exe`.
 
 Run the matching `run-arm64.cmd` or `run-x64.cmd` launcher from the copied
-folder. The launcher changes into its own folder so the sidecar `node_modules`
-directory is found even when started from another working directory. The
-folder also contains `server-config.json`; update its input and output paths
+folder. The launcher changes into its own folder before starting `server.exe`.
+The folder also contains `server-config.json`; update its input and output paths
 for the target computer.
 
-Each folder includes `node.exe`, so Node.js does not need to be installed on
-the target computer. The Linux sharp binary installed on the build host is not
-copied; each folder contains the matching Windows native sharp package.
+Each folder includes a compiled Bun server, so Bun and Node.js do not need to be
+installed on the target computer.
 
-4. CLI style (node)
+4. CLI style (Bun)
 
 ```bash
 # use the example config shipped with the repo
-node indexer-cli.mjs --config ./examples/server-config.json
+bun indexer-cli.mjs --config ./examples/server-config.json
 ```
 
 5. Install as a dependency in another project
@@ -583,7 +576,7 @@ import { walkStream } from 'albums-google-photos-indexer/src/indexer/io/walk-str
 
 Notes
 
-- This package is ESM-only (`"type": "module"` in `package.json`), and requires Node.js >= 18.
+- This package is ESM-only (`"type": "module"` in `package.json`), and requires Bun >= 1.4.0.
 - When using the installed package, you can run the bundled CLI binary via `npx indexer` (the package provides a `bin` entry).
 - See the example programmatic runner in [examples/programmatic.mjs](examples/programmatic.mjs) for a runnable demo.
 
