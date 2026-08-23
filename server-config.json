@@ -1,8 +1,6 @@
 {
   "TAKEOUT_ROOTS": [
-    "/mnt/f/backupTakeout",
-    "/mnt/f/TakeoutSample",
-    "/mnt/f/Takeout"
+    "/mnt/f/Benchmark"
   ],
-  "TARGET_ROOT": "/mnt/c/Users/bogda/TakeoutCache44444"
+  "TARGET_ROOT": "/mnt/c/Users/bogda/TakeoutCacheB2"
 }
