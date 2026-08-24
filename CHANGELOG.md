@@ -1,3 +1,9 @@
+## [1.54.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.53.0...v1.54.0) (2026-08-24)
+
+### 🚀 Features
+
+* enhance progress tracking with detailed metrics and update configuration options ([ae18a39](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/ae18a395b7e8e5cf2edac025f11b9725b3dc75ee))
+
 ## [1.53.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.52.0...v1.53.0) (2026-08-24)
 
 ### 🚀 Features
