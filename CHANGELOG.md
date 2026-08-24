@@ -1,3 +1,9 @@
+## [1.49.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.48.0...v1.49.0) (2026-08-24)
+
+### 🚀 Features
+
+* add FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 environment variable to workflow files ([f90a9dc](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/f90a9dc66a16ecbb480e058782eaaa404d719f11))
+
 ## [1.48.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.47.0...v1.48.0) (2026-08-24)
 
 ### 🚀 Features
