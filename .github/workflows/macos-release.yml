@@ -24,7 +24,7 @@ jobs:
           bun-version: 1.4.0
 
       - name: "♻️ Cache Bun install cache"
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.bun/install/cache
           key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
@@ -39,7 +39,7 @@ jobs:
           bun run dist:macos
 
       - name: "⬆️ Upload macOS distributions"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: macos-distributions
           path: TravelAlbums-macos-*.tar.gz

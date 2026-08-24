@@ -54,7 +54,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: "📦 Collect platform distributions"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: "*-distributions"
           merge-multiple: true
