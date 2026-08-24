@@ -1,3 +1,13 @@
+## [1.53.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.52.0...v1.53.0) (2026-08-24)
+
+### 🚀 Features
+
+* add concurrency and image concurrency options to configuration files ([7941141](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/7941141a3102750c87dcdfb68facb2dc67b0a7f1))
+
+### 🧹 Refactoring
+
+* remove PowerShell launcher references from README and package.json ([0b95c06](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/0b95c06809fe84ac5c69f805a17aba76ed984204))
+
 ## [1.52.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.51.0...v1.52.0) (2026-08-24)
 
 ### 🚀 Features
