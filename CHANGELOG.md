@@ -1,3 +1,9 @@
+## [1.52.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.51.0...v1.52.0) (2026-08-24)
+
+### 🚀 Features
+
+* add thumbnail size and quality configuration options to various files ([3292ab8](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/3292ab883d73f2af3385208f5367cd2ad7dbbf5c))
+
 ## [1.51.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.50.0...v1.51.0) (2026-08-24)
 
 ### 🚀 Features
