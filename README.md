@@ -126,6 +126,8 @@ directory:
 {
   "TAKEOUT_ROOTS": ["/path/to/Takeout"],
 	"TARGET_ROOT": "/path/to/index-cache",
+	"CONCURRENCY": 3,
+	"IMAGE_CONCURRENCY": 4,
 	"THUMBNAIL_SIZE": 550,
 	"THUMBNAIL_QUALITY": 70
 }
@@ -136,6 +138,9 @@ single-value `TAKEOUT_ROOT` key is still accepted for compatibility. Paths may
 be absolute or relative to the process working directory. See the runnable
 example in [examples/server-config.json](examples/server-config.json), and
 [server-config-win.json](server-config-win.json) for Windows paths.
+`CONCURRENCY` controls the number of filesystem workers and
+`IMAGE_CONCURRENCY` controls the number of in-flight image transforms. They
+default to `16` when omitted.
 `THUMBNAIL_SIZE` controls the maximum thumbnail width and height in pixels, and
 `THUMBNAIL_QUALITY` controls JPEG quality. Both default to `550` and `70`.
 

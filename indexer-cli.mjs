@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import os from 'node:os';
 import path from 'node:path';
 
 import EventEmitter from 'node:events';
@@ -18,24 +17,7 @@ import { createProgress } from './src/indexer/progress/progress.mjs';
 import { convertJSON } from './src/indexer/transform/ndjson-to-json-map.mjs';
 import { buildCitiesGridCleaned } from './src/indexer/utils/build-cities-grid.mjs';
 
-const MODE = 'ssd';
-
-const CONFIG = {
-  hdd: { concurrency: 3, imageConcurrency: 4 },
-  ssd: { concurrency: 16, imageConcurrency: 16 },
-};
-
-const getConfig = () =>
-  MODE === 'ssd'
-    ? CONFIG.ssd
-    : MODE === 'hdd'
-      ? CONFIG.hdd
-      : os.platform() === 'win32'
-        ? CONFIG.ssd
-        : CONFIG.hdd;
-
-const ACTIVE_CONFIG = getConfig();
-const CONCURRENCY = ACTIVE_CONFIG.concurrency;
+const DEFAULT_CONFIG = { concurrency: 16, imageConcurrency: 16 };
 
 let _CURRENT_CONTROLLER = null;
 let _CURRENT_DONE = null;
@@ -65,6 +47,8 @@ export class IndexerController {
 
     this.done = (async () => {
       const cfg = this.opts.cfg || await loadConfigFromArgv();
+      const concurrency = cfg.CONCURRENCY ?? DEFAULT_CONFIG.concurrency;
+      const imageConcurrency = cfg.IMAGE_CONCURRENCY ?? DEFAULT_CONFIG.imageConcurrency;
 
       const OUT_DIR = path.resolve(cfg.TARGET_ROOT);
 
@@ -83,9 +67,8 @@ export class IndexerController {
       const resolvedRoots = TAKEOUT_ROOTS.map(r => path.resolve(r));
 
       console.log(`Scanning roots: ${resolvedRoots.join(', ')}`);
-      console.log(`Mode: ${MODE}`);
-      console.log(`Concurrency: ${CONCURRENCY}`);
-      console.log(`Image concurrency: ${ACTIVE_CONFIG.imageConcurrency}`);
+      console.log(`Concurrency: ${concurrency}`);
+      console.log(`Image concurrency: ${imageConcurrency}`);
       console.log(`Output: ${OUT_DIR}`);
       console.log(`Output Thumbnails: ${OUT_DIR}/${CACHE_FOLDER}`);
       console.log(`Output JSON: ${OUT_DIR}/${OUT_FILE}`);
@@ -108,7 +91,7 @@ export class IndexerController {
       console.log(`===============================`);
 
       // Bound in-flight native image transforms separately from filesystem workers.
-      const transformPool = createSemaphore(ACTIVE_CONFIG.imageConcurrency);
+      const transformPool = createSemaphore(imageConcurrency);
 
       try {
         for (const ROOT of resolvedRoots) {
@@ -128,7 +111,7 @@ export class IndexerController {
           const depsWithPool = { ...deps, transformPool };
           const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
 
-          await walkStream(ROOT, emit, existingSet, citiesGrid, CONCURRENCY, workerFunc, progress, signal);
+          await walkStream(ROOT, emit, existingSet, citiesGrid, concurrency, workerFunc, progress, signal);
         }
 
         await flush();

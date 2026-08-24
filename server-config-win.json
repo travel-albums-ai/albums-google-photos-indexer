@@ -1,6 +1,8 @@
 {
   "TAKEOUT_ROOTS": ["F:\\Benchmark"],
   "TARGET_ROOT": "C:\\Users\\bogda\\Benchmark",
+  "CONCURRENCY": 16,
+  "IMAGE_CONCURRENCY": 16,
   "THUMBNAIL_SIZE": 550,
   "THUMBNAIL_QUALITY": 70
 }

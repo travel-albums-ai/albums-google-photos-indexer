@@ -2,7 +2,9 @@
   "TAKEOUT_ROOTS": [
     "/mnt/f/Benchmark"
   ],
-  "TARGET_ROOT": "/mnt/c/Users/bogda/TakeoutCacheC5",
-  "THUMBNAIL_SIZE": 550,
-  "THUMBNAIL_QUALITY": 70
+  "TARGET_ROOT": "/mnt/c/Users/bogda/TakeoutCacheC96",
+  "CONCURRENCY": 8,
+  "IMAGE_CONCURRENCY": 32,
+  "THUMBNAIL_SIZE": 960,
+  "THUMBNAIL_QUALITY": 99
 }

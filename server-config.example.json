@@ -1,6 +1,8 @@
 {
   "TAKEOUT_ROOTS": ["/var/GoogleTakeout"],
   "TARGET_ROOT": "/var/TakeoutCache",
+  "CONCURRENCY": 16,
+  "IMAGE_CONCURRENCY": 16,
   "THUMBNAIL_SIZE": 550,
   "THUMBNAIL_QUALITY": 70
 }
