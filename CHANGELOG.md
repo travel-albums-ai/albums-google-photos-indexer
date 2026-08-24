@@ -1,3 +1,9 @@
+## [1.47.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.46.0...v1.47.0) (2026-08-24)
+
+### 🚀 Features
+
+* improve macOS code-signing logic and error messages ([c0e623f](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/c0e623f2876e208a616e65fbc193a3288b6534da))
+
 ## [1.46.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.45.0...v1.46.0) (2026-08-23)
 
 ### 🚀 Features
