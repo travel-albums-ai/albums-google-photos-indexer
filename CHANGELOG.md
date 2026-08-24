@@ -1,3 +1,9 @@
+## [1.48.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.47.0...v1.48.0) (2026-08-24)
+
+### 🚀 Features
+
+* update actions/checkout to v5 in workflow files ([4859fe3](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/4859fe396e9435d901a97b95ae1d4b86d31f097f))
+
 ## [1.47.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.46.0...v1.47.0) (2026-08-24)
 
 ### 🚀 Features
