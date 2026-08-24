@@ -1,3 +1,4 @@
+import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { SEPARATOR } from '../indexer.mjs';
 
@@ -67,6 +68,13 @@ export async function worker(queue, emit, citiesGrid, deps) {
 
       const ext = path.extname(filename).toLowerCase();
       const isImage = IMAGE_EXTS.has(ext);
+      let sourceBytes = 0;
+
+      try {
+        sourceBytes = (await fsp.stat(path.join(folder, filename))).size;
+      } catch (e) {
+        sourceBytes = 0;
+      }
 
       if (isImage) {
         if (transformPool) {
@@ -93,6 +101,7 @@ export async function worker(queue, emit, citiesGrid, deps) {
 
       await emit({ [id]: result });
 
+      progress.addBytes(sourceBytes);
       progress.incDone();
       progress.log();
     } catch (err) {

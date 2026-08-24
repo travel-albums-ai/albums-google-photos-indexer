@@ -176,7 +176,10 @@ The configured `TARGET_ROOT` contains:
 `metadata.json` is written incrementally and may be incomplete while indexing
 is running. Use `/status` or wait for the CLI to finish before consuming the
 complete file. There is no separate `progress.json` output file; progress is
-available through the running controller and server status response.
+available through the running controller and server status response. The
+progress state includes `imagesPerSecond`, `bytesConsumed` (source image bytes
+successfully indexed), `ramUsageBytes` (Node.js process RSS), and
+`cpuUsagePercent` (Node.js process CPU usage).
 
 ## REST server
 
