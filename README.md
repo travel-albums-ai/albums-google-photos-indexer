@@ -129,7 +129,9 @@ directory:
 ```json
 {
   "TAKEOUT_ROOTS": ["/path/to/Takeout"],
-  "TARGET_ROOT": "/path/to/index-cache"
+	"TARGET_ROOT": "/path/to/index-cache",
+	"THUMBNAIL_SIZE": 550,
+	"THUMBNAIL_QUALITY": 70
 }
 ```
 
@@ -138,6 +140,8 @@ single-value `TAKEOUT_ROOT` key is still accepted for compatibility. Paths may
 be absolute or relative to the process working directory. See the runnable
 example in [examples/server-config.json](examples/server-config.json), and
 [server-config-win.json](server-config-win.json) for Windows paths.
+`THUMBNAIL_SIZE` controls the maximum thumbnail width and height in pixels, and
+`THUMBNAIL_QUALITY` controls JPEG quality. Both default to `550` and `70`.
 
 The indexer currently supports local filesystem input only. Cloud storage and
 credential-based adapters are not implemented.

@@ -1,4 +1,6 @@
 {
   "TAKEOUT_ROOTS": ["/var/GoogleTakeout"],
-  "TARGET_ROOT": "/var/TakeoutCache"
+  "TARGET_ROOT": "/var/TakeoutCache",
+  "THUMBNAIL_SIZE": 550,
+  "THUMBNAIL_QUALITY": 70
 }

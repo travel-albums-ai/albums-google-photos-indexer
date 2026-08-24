@@ -14,14 +14,16 @@ export async function getSizesAndCreatePreview(inputPath) {
 export async function createThumbnailAndPreview(
   inputPath,
   outputPath,
+  thumbnailSize = 550,
+  thumbnailQuality = 70,
 ) {
   const image = new Bun.Image(inputPath, { autoOrient: true })
-    .resize(550, 550, {
+    .resize(thumbnailSize, thumbnailSize, {
       fit: 'inside',
       withoutEnlargement: true,
       filter: 'linear',
     })
-    .jpeg({ quality: 70 });
+    .jpeg({ quality: thumbnailQuality });
 
   await image.write(outputPath);
   return { width: image.width, height: image.height };
@@ -35,6 +37,8 @@ export async function createOrReadThumbnail(
   rootIndex = 'root',
   relPath = '',
   base64Root,
+  thumbnailSize = 550,
+  thumbnailQuality = 70,
 ) {
   // Ensure relative path is safe and not escaping the root
   let safeRel = relPath || '';
@@ -52,6 +56,11 @@ export async function createOrReadThumbnail(
     await fsp.access(thumbPath);
     return getSizesAndCreatePreview(thumbPath);
   } catch (err) {
-    return createThumbnailAndPreview(path.join(folder, fileName), thumbPath);
+    return createThumbnailAndPreview(
+      path.join(folder, fileName),
+      thumbPath,
+      thumbnailSize,
+      thumbnailQuality,
+    );
   }
 }

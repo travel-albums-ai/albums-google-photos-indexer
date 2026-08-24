@@ -115,7 +115,16 @@ export class IndexerController {
           if (signal.aborted) break;
           console.log(`\n[discovery] Scanning: ${ROOT}`);
 
-          const deps = { readJsonSafe, createOrReadThumbnail, convertJSON, progress, outDir: OUT_DIR, ROOT };
+          const deps = {
+            readJsonSafe,
+            createOrReadThumbnail,
+            convertJSON,
+            progress,
+            outDir: OUT_DIR,
+            ROOT,
+            thumbnailSize: cfg.THUMBNAIL_SIZE ?? 550,
+            thumbnailQuality: cfg.THUMBNAIL_QUALITY ?? 70,
+          };
           const depsWithPool = { ...deps, transformPool };
           const workerFunc = (queue, emitFn, grid) => worker(queue, emitFn, grid, depsWithPool);
 

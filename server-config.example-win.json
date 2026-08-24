@@ -1,4 +1,6 @@
 {
   "TAKEOUT_ROOTS": ["C:\\GoogleTakeout"],
-  "TARGET_ROOT": "C:\\TakeoutCache"
+  "TARGET_ROOT": "C:\\TakeoutCache",
+  "THUMBNAIL_SIZE": 550,
+  "THUMBNAIL_QUALITY": 70
 }
