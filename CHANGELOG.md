@@ -1,3 +1,9 @@
+## [1.51.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.50.0...v1.51.0) (2026-08-24)
+
+### 🚀 Features
+
+* upgrade actions/checkout, actions/cache, and actions/upload-artifact to latest versions in workflow files ([172981a](https://github.com/travel-albums-ai/albums-google-photos-indexer/commit/172981a0d387e140450628916a9c6bd812e1edf0))
+
 ## [1.50.0](https://github.com/travel-albums-ai/albums-google-photos-indexer/compare/v1.49.0...v1.50.0) (2026-08-24)
 
 ### 🚀 Features
