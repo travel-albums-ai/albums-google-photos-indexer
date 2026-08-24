@@ -37,10 +37,6 @@ Quick steps (Windows — easiest):
 3. Open the extracted folder and look for the `runMe` launcher for your platform:
 	- Windows: `*.cmd` (double-click) or `*.ps1` (PowerShell). You can also run the bundled PowerShell launcher from a terminal:
 
-```powershell
-powershell.exe -ExecutionPolicy Bypass -File .\launcher.ps1
-```
-
 4. The launcher starts the service. It spawns the indexer internally and begins indexing the bundled or default configured paths.
 
 What you don't need to do:
@@ -257,12 +253,6 @@ xattr -dr com.apple.quarantine dist-macos-arm64
 
 Only remove quarantine for binaries you trust; this is a diagnostic/workaround,
 not a substitute for signing and notarization.
-
-To run the PowerShell tray launcher directly:
-
-```powershell
-powershell.exe -ExecutionPolicy Bypass -File .\launcher.ps1
-```
 
 ## Programmatic usage
 

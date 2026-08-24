@@ -27,17 +27,12 @@
     "distribute": "bun run build && bun run dist:package",
     "next": "semantic-release",
     "delete:archives": "rm -f TravelAlbums-windows-* TravelAlbums-macos-* TravelAlbums-ubuntu-*",
-    "delete": "bun run delete:archives && rm -rf dist-windows-* dist-macos-* dist-ubuntu-* dist",
-    "powershell:arm64": "cd ./dist-windows-arm64 && powershell -ExecutionPolicy Bypass -File launcher.ps1"
+    "delete": "bun run delete:archives && rm -rf dist-windows-* dist-macos-* dist-ubuntu-* dist"
   },
   "main": "dist/indexer-cli.mjs",
   "files": [
     "indexer-cli.mjs",
     "server.mjs",
-    "run-windows.cmd",
-    "run-macos.sh",
-    "run-ubuntu.sh",
-    "launcher.ps1",
     "dist/",
     "src/",
     "README.md",
