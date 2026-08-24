@@ -54,19 +54,16 @@ execFileSync('bun', [
 ], { cwd: projectDir, stdio: 'inherit' });
 
 const signingIdentity = process.env.MACOS_CODESIGN_IDENTITY;
-if (platform === 'macos' && signingIdentity) {
+if (platform === 'macos') {
   if (process.platform !== 'darwin') {
-    throw new Error('MACOS_CODESIGN_IDENTITY requires running the macOS build on macOS');
+    throw new Error('Building macOS binaries requires running on macOS to code-sign the executable');
   }
-  execFileSync('codesign', [
-    '--force',
-    '--options',
-    'runtime',
-    '--timestamp',
-    '--sign',
-    signingIdentity,
-    executablePath,
-  ], { cwd: projectDir, stdio: 'inherit' });
+  // Apple Silicon refuses to run unsigned binaries, so ad-hoc sign ("-") when no real identity is set.
+  // Hardened runtime + timestamp are only valid with a real (non ad-hoc) signing identity.
+  const codesignArgs = signingIdentity
+    ? ['--force', '--options', 'runtime', '--timestamp', '--sign', signingIdentity, executablePath]
+    : ['--force', '--sign', '-', executablePath];
+  execFileSync('codesign', codesignArgs, { cwd: projectDir, stdio: 'inherit' });
 }
 
 await fs.copyFile(path.join(projectDir, target.config), path.join(outputDir, 'server-config.json'));
